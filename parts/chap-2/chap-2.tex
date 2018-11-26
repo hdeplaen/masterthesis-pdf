@@ -1,0 +1,65 @@
+\chapter{Machine-learning algorithms for intrusion detection systems}
+\label{cha:2}
+
+\section{Intrusion Detection Systems}
+\emph{Intrusion detection systems} (IDS) is a brick in the existing defence algorithms arsenal wall of information security. More specifically, it comprises a series of mechanisms that monitor network nodes and detect intrusions, i.e. malicious activity or policy violations. An IDS usually analyses the incoming packets and notifies the suspect ones. In the most often cases, IDS are defined to be the sole surveillance application and does not comprise the control application: how the suspect packets are treated after a notification is not considered as being part of the IDS, the latter only focuses on the monitoring, analysis and notification \cite{Mukherjee1994NetworkDetection}. Classically, the reports are made to an administrator or another competent entity, as \emph{security information and event management} (SIEM) \cite{Bhatt2014TheSystems}, which are then in charge of the control application. 
+
+IDS should not be confused with \emph{firewalls}, but merely be seen as a complement of it. The sole role of firewalls is to ensure that communication policies are followed carefully. A first
+difference is that firewalls have an upstream role whereas IDS are working downstream. In other words, firewalls are verifying that each packet is following carefully one of the pre-defined allowed communication protocols, before it enters the local network. An IDS analyses the packets after they entered the local network to control if they shows no abnormal behaviour. Another second difference has already been mentioned: firewalls consider each packet separately whereas IDS can consider group of packets and thus look at a communication as whole. In this sense, IDS are much more suited against \emph{denial of service} (DoS) attacks than classical firewalls. A last difference concerns the exact scope of the packet analysis. As firewalls only have to enforce communication policies, they only have to look at the packet header, whereas IDS are searching for abnormal behaviours and are thus looking at the packets on their whole. To summarise this all, let's consider a high security building: the firewall would be equivalent to the agents allowing or not each individual to enter the site by carefully inspecting their papers, whereas the IDS would be the security agents monitoring the cameras inside to building searching for abnormal behaviour.
+
+IDS should also not be confused with \emph{anti-viruses} application --- though the term \emph{anti-malware} would be more suited nowadays --- that refer to the application layer in charge of the detection and control of malicious code, or malware. The first difference concerns the scope of their analysis: anti-viruses are analysing (executable) code on a system more specifically than packets on a network. The second difference is similar as before: anti-viruses analyses code before it is allowed to be executed by the system and IDS are analysing packets that already entered the network.
+
+However, all these taxonomy classifications are to be considered with some flexibility. As the attacks become more and more sophisticated, security entities are incorporating more and more subtleties are extending the scope of their detection methods and integrate other type of methods classically defined by another entity. \noteH{last paragraph to be rewritten}
+
+\subsection{How IDS work}
+As briefly stated before, IDS have three main components: monitoring analysis and notification. 
+
+The monitoring can be achieved in real time or at regular interval on different types of nodes, which define the type of IDS: network based IDS (NIDS), host based IDS (HIDS) and hybrid. 
+
+The analysis is the core part of the IDS and is again divided in three main components: the extraction of features, the pattern analysis and the final classification \cite{Winter2018}. This will be the part which will interest us in this thesis. \noteH{+ anomaly based or signature based}.
+
+As said before, the notification is done to a controller, either ban administrator or a SIEM. Classically, it is in the form of a series of log which are later examined by the controller. In this sense, the speed is not the main focus of an IDS, but rather the correct identification of intrusions. However, one can also consider \emph{intrusion prevention systems} (IPS) which are working upstream. The literature sometimes consider these systems to be a specific class of IDS or to be a category on their own. However \noteH{!! (au contraire des IDS}, IPS need to be fast and thus usually use signature-based detection. (IPS can be seen as an extension of firewalls: more similarities, but analysis of all the packet) In this sense, one should still consider analysis speed in IDS.
+
+\subsubsection{Extraction of feature}
+
+
+\subsection{Pattern analysis}
+
+
+\subsection{Classification}
+
+
+
+
+\section{Machine-learning algorithms for intrusion detection systems}
+
+\subsection{Ensemble}
+
+\subsubsection{Bagging}
+Bagging, short for \emph{boostrap aggregating} has first been described by Breiman \cite{Breiman1996BaggingPredictors}. Instead of one instance of a model trained on a whole learning set, different instances are trained with different bootstrap replicates of the original learning set. The final inference is then made by a majority vote on the different results. In other words, this method averages the set of the different possible learned models and reduces the instability of the prediction method. 
+
+Let's consider a data-set of $N$ elements $\mathcal{L}=\left\{ \left( x_n,y_n\right),n=1,...,N\right\}$ where $x$ is the input vector and $y$ the output vector. The idea is to minimise the variation of the predictor $\hat{y}=\phi\left(x,\mathcal{L}\right)$ by calculating its expectation over the distribution of $\mathcal{L}$
+\begin{equation}
+    \phi_A\left(x,\mathcal{L}\right) = \mathbb{E}_\mathcal{L} \phi\left(x,\mathcal{L}\right) \approx A \left( \left\{ \phi\left(x,\mathcal{L}_k\right) \right\} \right) \qquad k=1,\, \ldots,\, N_k
+\end{equation}
+where $A$ is an aggregation function (\emph{i.e.} mean for a regression or a majority vote for a classification) and $\mathcal{L}_k$ different instances of the distribution of $\mathcal{L}$. As the instances set $\{ \mathcal{L}_k \}$ is not available, a bootstrap set $\{\mathcal{L}^{(B)}\}$ is constructed, each instance consisting of $N$ elements drawn randomly from the original $\mathcal{L}$, but \emph{with replacement}. The average prediction is then calculated as
+\begin{equation}
+    \phi_B\left(x,\mathcal{L}\right) = A(\{ \phi(x,\mathcal{L}^{(B)}) \})
+\end{equation}
+In his experiments, Breiman noted that 25 a 50 bootstrap replicates $N_k$ seemed a reasonable choice. In a certain sense, one could see bagging as a variant of cross-validation method on the whole learning process: a sort of \emph{cross-learning} with replacement.
+
+The reason why bagging works is the much lower mean-squared prediction error of $\phi_A$ compared to $\phi$. Nevertheless, the fact of using the available $\phi_B$ instead of the theoretical $\phi_A$ has also drawbacks as it can deteriorate the prediction of already stable classifiers. In other words, bagging unstable classifiers such as neural nets, classification and linear regressions, usually improves them, whereas bagging usually stable classifiers such as $k$-nearest neighbours is not a good idea \cite{Breiman1996HeuristicsSelection}.
+
+\paragraph{Influence of MPC}
+Compare naïve bootstrapping (each bootstraps its own copy) and full bootstrapping as described above. Can be done in parallel (MPC wins a lot from parallelization).
+
+\subsubsection{Boosting}
+The boosting method is based on a proof by Schapire \cite{Schapire1989} that weak learnability, an algorithm that slightly out-performs a random classifier, is equivalent to a strong classifier. To prove this equivalence, he used an algorithm that sequentially trains classifiers. Each classifier has a training set consisting of half well-classified elements of the previous one and half of wrongly classified elements, the first classifier starting from the original training set. Based on this idea, a later algorithm, called \emph{adaptive boosting} was developed based on a better distribution of the missclassified elements for creating the subsequent training sets \cite{Freund1997ABoosting}. + majority vote from all classifiers.
+
++ intuitively the algorithm will perform better when learning from the more difficult elements. In a certain sense, the more complex elements will have more degrees of freedom (not sure of this one).
+
+\paragraph{Influence of MPC}
+Defaults from bagging + subsequent classifiers (no possible parallelisation)
+
+\subsubsection{Stacking}
+Better version of cross-validation, more abstract. Developed by Wolpert \cite{Wolpert1992StackedGeneralization}.

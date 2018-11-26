@@ -1,0 +1,147 @@
+\documentclass[master=wit,british,fleqn]{misc/kulemt}
+
+%%%%%%%%%%%%%%%%
+%%% PACKAGES %%%
+%%%%%%%%%%%%%%%%
+
+%\usepackage{ucs}
+\usepackage[TS1,T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{dsfont}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage[framemethod=tikz]{mdframed}
+\usepackage{microtype}
+\usepackage{textcomp}
+\usepackage[pdfusetitle,plainpages=false]{hyperref}
+
+%packages spéciaux
+%\usepackage{fullpage}
+\usepackage{mathrsfs}
+%\usepackage{numprint}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wrapfig}
+%\usepackage[font=small,labelfont=sc]{caption}
+\usepackage{makecell}
+\usepackage{array}
+\usepackage{csquotes}
+
+\usepackage[numbered,framed,autolinebreaks]{misc/mcode}
+
+%% FONTS
+\usepackage[lf]{Baskervaldx} % lining figures
+\usepackage[bigdelims,vvarbb]{newtxmath} % math italic letters from Nimbus Roman
+\usepackage[cal=boondoxo]{mathalfa} % mathcal from STIX, unslanted a bit
+\renewcommand*\oldstylenums[1]{\textosf{#1}}
+%\usepackage{sfmath}
+%\usepackage{sansmathaccent}
+%\usepackage{beramono}
+
+\usepackage{caption}
+\usepackage{subcaption}
+
+%% STYLE
+\pagestyle{headings}
+\usepackage{misc/slashbox}
+\usepackage{placeins} % permet d'utiliser \FloatBarrier et donc d'imposer le placement des images dans une section donnée.
+\usepackage{multirow}
+
+\newcommand\scalemath[2]{\scalebox{#1}{\mbox{\ensuremath{\displaystyle #2}}}}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\definecolor{grisclair}{HTML}{F2F2F2}
+\lstset{language=Matlab, breaklines=true, backgroundcolor=\color{grisclair} , numbers=left, frame=none, aboveskip=0cm} %, basicstyle=\tiny}
+
+\usepackage{fancyhdr}
+%\addto\captionsenglish{\renewcommand{\chaptername}{Assignment}}
+
+%% TABLES
+\usepackage{tabularx}
+\newcommand\hlineI{\noalign{\hrule height 1.2pt}} % I line 1.2pt
+\newcolumntype{I}{!{\vline width 1.2pt}} % I column 1.2pt
+
+%\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+%\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+%\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
+\newcolumntype{C}[1]{%
+ >{\vbox to 2ex\bgroup\vfill\centering\arraybackslash}%
+ p{#1}%
+ <{\vskip-\baselineskip\vfill\egroup}}
+
+%% SCALED VERBATIM
+\usepackage{verbatim}
+\usepackage{adjustbox}
+\usepackage{fancyvrb}
+\newenvironment{myverb}{%
+ \VerbatimEnvironment
+ \begin{adjustbox}{max width=1\linewidth}
+ \begin{BVerbatim}
+  }{
+  \end{BVerbatim}
+ \end{adjustbox}
+}
+
+%% PERSONAL COMMANDS
+\newcommand{\noteH}[1]{{\color{red} \textit{#1}}}
+
+%% OTHERS
+\DeclareMathOperator{\tr}{tr}
+
+%% BIBLIOGRAPHY
+\usepackage[backend=biber,style=ieee,url=false,dashed=false,doi=false,bibwarn=false]{biblatex}
+\addbibresource{misc/references.bib}
+%\usepackage{cite}
+
+%%%%%%%%%%%%%
+%%% SETUP %%%
+%%%%%%%%%%%%%
+
+\setup{title={Privacy-friendly machine learning algorithms for intrusion detection systems},
+  author={Henri De Plaen},
+  promotor={Prof.\,dr.\,ir.\, Bart Preneel},
+  assessor={Prof.\,dr.\,ir.\, Karl Meerbergen},
+  assistant={Abdelrahaman~Aly\and Aysajan~Abidin}}
+
+\setup{filingcard,
+  translatedtitle=,
+  udc=621.3,
+  shortabstract={In today's information age, the risks and security threats to data are commonplace. Vital enterprise and user information should be protected from uninvited intruders lurking in our systems. Imagine the case where intruders are accessing to sensitive medical, industrial or governmental records using stolen or hacked but valid credentials. Machine learning techniques and algorithms have been used as a tool for intrusion detection in such scenarios. They typically monitor the behavior of the users, detecting anomalies that indicate possible infiltrations.}}
+
+%\setup{font=lm}
+
+%%%%%%%%%%%%%%%%
+%%% DOCUMENT %%%
+%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+%\input{parts/misc/preface}
+%\input{parts/misc/abstract}
+\tableofcontents*
+%\input{parts/misc/lists.tex}
+
+\mainmatter
+%\input{parts/misc/intro}
+\input{parts/chap-1/chap-1} 
+\input{parts/chap-2/chap-2}
+\input{parts/chap-3/chap-3}
+\input{parts/misc/conclu}
+
+\appendixpage*
+\appendix
+\include{app/app-A}
+\include{app/app-n}
+
+\backmatter
+%\bibliographystyle{ieeetr}
+%\bibliography{misc/references.bib}
+\printbibliography
+
+\end{document}
