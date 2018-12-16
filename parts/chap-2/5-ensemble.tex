@@ -1,0 +1,23 @@
+\section{Ensemble methods}
+\subsection{Bagging}
+Bagging, short for \emph{boostrap aggregating} has first been described by Breiman \cite{Breiman1996BaggingPredictors}. Instead of one instance of a model trained on a whole learning set, different instances are trained with different bootstrap replicates of the original learning set. The final inference is then made by a majority vote on the different results. In other words, this method averages the set of the different possible learned models and reduces the instability of the prediction method. 
+
+Let's consider a data-set of $N$ elements $\mathcal{L}=\left\{ \left( x_n,y_n\right),n=1,...,N\right\}$ where $x$ is the input vector and $y$ the output vector. The idea is to minimise the variation of the predictor $\hat{y}=\phi\left(x,\mathcal{L}\right)$ by calculating its expectation over the distribution of $\mathcal{L}$
+\begin{equation}
+    \phi_A\left(x,\mathcal{L}\right) = \mathbb{E}_\mathcal{L} \phi\left(x,\mathcal{L}\right) \approx A \left( \left\{ \phi\left(x,\mathcal{L}_k\right) \right\} \right) \qquad k=1,\, \ldots,\, N_k
+\end{equation}
+where $A$ is an aggregation function (\emph{i.e.} mean for a regression or a majority vote for a classification) and $\mathcal{L}_k$ different instances of the distribution of $\mathcal{L}$. As the instances set $\{ \mathcal{L}_k \}$ is not available, a bootstrap set $\{\mathcal{L}^{(B)}\}$ is constructed, each instance consisting of $N$ elements drawn randomly from the original $\mathcal{L}$, but \emph{with replacement}. The average prediction is then calculated as
+\begin{equation}
+    \phi_B\left(x,\mathcal{L}\right) = A(\{ \phi(x,\mathcal{L}^{(B)}) \})
+\end{equation}
+In his experiments, Breiman noted that 25 a 50 bootstrap replicates $N_k$ seemed a reasonable choice. In a certain sense, one could see bagging as a variant of cross-validation method on the whole learning process: a sort of \emph{cross-learning} with replacement.
+
+The reason why bagging works is the much lower mean-squared prediction error of $\phi_A$ compared to $\phi$. Nevertheless, the fact of using the available $\phi_B$ instead of the theoretical $\phi_A$ has also drawbacks as it can deteriorate the prediction of already stable classifiers. In other words, bagging unstable classifiers such as neural nets, classification and linear regressions, usually improves them, whereas bagging usually stable classifiers such as $k$-nearest neighbours is not a good idea \cite{Breiman1996HeuristicsSelection}.
+
+\subsection{Influence of MPC}
+Compare naïve bootstrapping (each bootstraps its own copy) and full bootstrapping as described above. Can be done in parallel (MPC wins a lot from parallelization).
+
+\subsubsection{Boosting}
+The boosting method is based on a proof by Schapire \cite{Schapire1989} that weak learnability, an algorithm that slightly out-performs a random classifier, is equivalent to a strong classifier. To prove this equivalence, he used an algorithm that sequentially trains classifiers. Each classifier has a training set consisting of half well-classified elements of the previous one and half of wrongly classified elements, the first classifier starting from the original training set. Based on this idea, a later algorithm, called \emph{adaptive boosting} was developed based on a better distribution of the missclassified elements for creating the subsequent training sets \cite{Freund1997ABoosting}. + majority vote from all classifiers.
+
++ intuitively the algorithm will perform better when learning from the more difficult elements. In a certain sense, the more complex elements will have more degrees of freedom (not sure of this one).
