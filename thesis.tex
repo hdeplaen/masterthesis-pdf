@@ -29,6 +29,7 @@
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{csquotes}
+\usepackage[boxed]{algorithm2e}
 
 \usepackage[numbered,framed,autolinebreaks]{misc/mcode}
 
@@ -90,6 +91,7 @@
 
 %% PERSONAL COMMANDS
 \newcommand{\noteH}[1]{{\color{red} \textit{#1}}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
 %% OTHERS
 \DeclareMathOperator{\tr}{tr}
@@ -105,9 +107,9 @@
 
 \setup{title={Privacy-friendly machine learning algorithms for intrusion detection systems},
   author={Henri De Plaen},
-  promotor={Prof.\,dr.\,ir.\, Bart Preneel},
-  assessor={Prof.\,dr.\,ir.\, Karl Meerbergen},
-  assistant={Abdelrahaman~Aly\and Aysajan~Abidin}}
+  promotor={Prof.\,Dr.\,ir.\,Bart~Preneel},
+  assessor={Prof.\,Dr.\,ir.\,Sabine~Van~Huffel \and Prof.\,Dr.\,ir.\,Karl~Meerbergen},
+  assistant={ Dr.\,Aysajan~Abidin \and Dr.\,Abdelrahaman~Aly}}
 
 \setup{filingcard,
   translatedtitle=,
@@ -128,16 +130,16 @@
 %\input{parts/misc/lists.tex}
 
 \mainmatter
-%\input{parts/misc/intro}
-\input{parts/chap-1/chap-1} 
-\input{parts/chap-2/chap-2}
-\input{parts/chap-3/chap-3}
-\input{parts/misc/conclu}
+\input{parts/chap-1/0-chap-1} 
+\input{parts/chap-2/0-chap-2}
+\input{parts/chap-3/0-chap-3}
+\input{parts/chap-4/0-chap-4}
+\input{parts/chap-5/0-chap-5}
 
 \appendixpage*
 \appendix
-\include{app/app-A}
-\include{app/app-n}
+\include{app/matlab}
+\include{app/scale}
 
 \backmatter
 %\bibliographystyle{ieeetr}

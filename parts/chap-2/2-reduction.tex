@@ -1,0 +1,118 @@
+\section{Data reduction}
+
+
+\subsection{Instance set size reduction}
+Instance-based learning algorithms are often faced with the problem of deciding which instances to store for use during generalization. Storing too many instances can result in large memory requirements and slow execution speed, and can cause an oversensitivity to noise. \noteH{Input size so big as possible to reduce variance of the results}
+
+In the practice, the data can be classified into two kind of classes, attack and no attack, or normal. In a practical intrusion detection system, most of the traffic is normal and sole a few proportion is attacking. We thus want to reduce the size of the normal data-set to make it of a similar size to the attack classes. Furthermore, the normal instances are very diversified and one may not just reduce the set randomly in the risk of missing relevant instances. One must thus find a more intelligent heuristic to decide which normal instances to keep.
+
+How to decide which instances keep?
+Keep only the ones near to the decision boundary. (+ explain what is a decision boundary). Way of keeping the sole normal instances near the decision boundary out of a way bigger set and thus build a more relevant training set of normal instances.
+
+\subsubsection{$k$-means clustering}
+The $k$-means clustering algorithm is a semi-supervised instance set reduction algorithm. This a specific case of clustering methods, that aim to divide the original data-set into smaller $k$ smaller clusters that should share some common properties. The challenge here is to find the most homogeneous possible clusters, which instances are similar enough --- referred to as the minimisation of \emph{intra-class inertia} ---, but not too many so that the clusters are well differentiated -- also referred to as the maximiastion of \emph{inter-class intertia}. After this being achieved, one can thus reduce each cluster far from the decision boundary to an archetype instance of this cluster and keep the clusters near the decision boundary. The algorithm is semi-supervised as the clustering in itself is only based on the features set, but is only applied on the data-points that are classified as normal, which of course depends on the target space.
+
+To determine the different clusters, the $k$-means algorithm tries to minimize the distance between the instances in each cluster $\mathcal{S}_i$. The number clusters is fixed to $k$, which an hyper-parameter of the model set by the user. Computing the distance between each of the points would require a quadratic at each evaluation of cluster. To keep the complexity linear, the distances are not computed between each of the instances, but between each of the instances and the mean of these instances $\mu_i = \left( \sum_{x_j \in \mathcal{S}_i} x_j\right)/\vert \mathcal{S}_i \vert$ where $\vert \mathcal{S}_i \vert$ is the number of instances in the cluster.
+\begin{equation}
+    \underset{\mathcal{S}}{\mathrm{arg}\,\mathrm{min}} \sum_{i=1}^k \sum_{x_i \in \mathcal{S}_i} \norm{x_j-\mu_i}^2
+\end{equation}
+Defining the optimal clusters would at least be exponentially complex in function of the number of total instances as each cluster combination would have to be tested. Therefore, the $k$-means algorithm starts with assigning the starting clusters to initial data-points, chosen at random in our case. It then goes through the whole data-set and assigns each point to the cluster with the nearest mean $\mu_i$. The means are then updated and the process starts again. This is given at algorithm~\ref{alg:k-means}. Although doesn't guarantees any optimality nor polynomial computational time, it is considered very effective in the practice \cite{Arthur2006Worst-caseMethod}.
+
+\begin{center}
+\begin{algorithm}[H]
+ \KwData{Feature data-set $\mathcal{F} = \left\{x_i\right\}_{i=1 \ldots n}$ and number of cluster sets $k$}
+ \KwResult{$k$ clusters $\mathcal{S}_i = \left\{x_i\right\}_{i=1 \ldots m_i}$}
+\DontPrintSemicolon
+
+\lForEach{i = 1\ldots k}{
+$\mu_i \leftarrow$ random $x_j$
+}
+\Repeat{$\mathrm{convergence}$}{
+\ForEach{$x_j \in \mathcal{F}$}{
+\lForEach{$i = 1\ldots k$}{$d_{i} \leftarrow \norm{x_j-\mu_i}$ \;}
+$l \leftarrow \mathrm{arg}\,\mathrm{min} d_i$ \;
+assign $x_j$ to $\mathcal{S}_l$ \;
+}
+\ForEach{$i = 1\ldots k$}{
+$\mu_i \leftarrow \mu_i = \frac{1}{\vert \mathcal{S}_i \vert}\left( \sum_{x_j \in \mathcal{S}_i} x_j\right)$
+}
+}
+\Return{$\mathcal{S}_{1 \ldots k}$}
+\caption{The $k$-means algorithm. The convergence criterion typically is no more evolution in the means or the composition of the clusters, which is almost always equivalent in the practice.}
+\label{alg:k-means}
+\end{algorithm}
+\end{center}
+
+Once the clusters are determined, we can remove the normal data instances of the farthest from the decision boundary and replace the whole cluster by its mean $\mu_i$. In this way, we reduce the number of points far from the decision boundary and keep all the ones near the decision boundary. The number of set to be reduced $p<k$ is also an hyper-parameter set by the user. A way to determine which one are the farthest is just to compute the distance between the mean of each cluster and the mean of the attack instances defined in the same way.
+
+\subsection{Feature size reduction}
++ explain why reduce the feature size. Complexity gain and better suited for distance calculation. Avoid curse of dimensionality. Avoid participation of non-relevant features in the training of the classification algorithm.
+
+\subsubsection{Principal components analysis}
+A linear Principal Components Analysis dimensionality reduction consists in a spectral analysis of the covariance matrix $\mathbf{\hat{\Sigma}}$ \noteH{(+ give forula for covariance matrix)} which can diagonalized with nonnegative eigenvalues $\lambda_i$ as it is semi-positive definite
+\begin{equation}
+\hat{\Sigma}x = \lambda_ix
+\end{equation}
+The $M$ greatest eigenvalues are then kept and the data transformed accordingly:
+\begin{equation}
+z_i = x_i^Tx
+\end{equation}
+Here is an attempt of an intuitive understanding of the process. Each input variable of the original input vector is independent, but some have strong underlying relations between them, measured by their covariance matrix. By diagonalizing it, there result $n_f$ new variables without any linear underlying relation. In a certain way, the eigenvectors $x_j$ represent these relations and their respective eigenvalues $\lambda_j$ their contribution, thus their importance. We can then afford to drop the non-important ones.
+
+In our case, each feature is first being normalized, i.e. zero mean and unit variance. In other words, the covariance matrix has an unit diagonal and with a feature dimension of $n_f$, we have $tr(\hat{\mathbf{\Sigma}})=n_f$ which corresponds in a certain way to the total variance of the whole feature space. Quite logically, the latter is invariant to any linear transformation as the trace is an invariant to any linear transformation. The main idea behind linear PCA analysis reduction is thus to keep the richness of the data a maximum, thus its total variance, and reducing its dimension a maximum by dropping its smallest contributors. A good measure for the relative importance of each eigenvector, or underlying linear relation, is its fraction or variance contribution given by
+\begin{equation}
+f_j = \lambda_j/\Sigma_{\forall j}\lambda_j = \lambda_j/\tr\left(\hat{\mathbf{\Sigma}}\right)
+\end{equation}
+
+One can then choose the input values it decides to keep in descending order of the respective fractions $f_j$.
+
+\subsubsection{Kernel principal components analysis and Mercer's trick}
+The main problem of PCA is that it limits to linear relations between the feature elements. However, feature relations, especially in high dimension spaces require non-linear relations. Therefore, it would be interesting to map the instances into a space of higher dimension $\phi(x)$.
+
+Therefore, we may now compute the covariance matrix in the mapped space $\phi\left( \mathcal{F} \right)$ of the feature space $\mathcal{F}$
+\begin{equation}
+    \hat{\Sigma}_{\phi} = \frac{1}{n_f} \sum_{x_i,x_j \in \mathcal{F}} \left( \phi(x_i) - \mathrm{mean} \right) \cdot \left( \phi(x_j) - \mathrm{mean} \right)
+\end{equation}
+
+Fortunately, there exists a method to compute this easily. Mercer's trick \cite{Minh2006MercersSmoothing}, also known as \emph{the kernel trick} can be used when an algorithm is based on the sole scalar product between feature vectors instances. It can then be replaced by a \emph{kernel matrix} representing the scalar product of the transformations.
+\begin{equation}
+    K_{ij} = K(x_i,x_j) = \phi(x_i) \cdot \phi(x_j)
+\end{equation}
+
+To compute the covariance matrix, we first have to centralize the data, which can be easily done with simple matrices multiplication
+\begin{eqnarray}
+    K_{ij}'&=& K_{ij} - \frac{2}{n_f} \sum_k^{n_f}\left( K_{ik}+K_{jk} \right) + \frac{1}{n_f^2} \sum_{l,m,n,o}^{n_f}K_{lm}K_{no} \\
+    K' &=& K - 1_{n_f}K - K1_{n_f}+ 1_{n_f}K1_{n_f}
+\end{eqnarray}
+where $1_{n_f}$ represents matrices of the size $\left( n_f , n_f \right)$ where all elements are equal to $1/n_f$.
+
+We can now perform a diagonalization on this new covariance matrix of the transformed data-points and perform the classification on them. This method is called \emph{kernel principal components analysis} (KPCA). 
+
+A very interesting property of the kernel matrix is there is no need for computing the explicit transformation of each data-point as we are only interested in their scalar product. Indeed, they are never used on their own, but always in the kernel matrix. As such, one may directly compute the direct matrix. This is even more interesting as the scalar product of most of the transformations are mapped into an infinite dimension feature space and the scalar product can only theoretically be computed in Hilbert sace. Different kernel functions are possible, that represent the scalar product of different transformations. These kernel functions rely more often on one or more hyper-parameter that has to be trained. The most common choices are
+\begin{itemize}
+    \item \textbf{Linear kernel function:} this corresponds to computing directly the scalar product onto the identity transformation $\phi(x_i)=x_i$ and is thus equivalent to a linear PCA analysis.
+    \begin{equation}
+        K(x_i,x_j) = x_i \cdot x_j
+    \end{equation}
+    \item \textbf{Radial basis function kernel function (RBF):} this kernel function has one hyper-parameter. At a scale factor excepted \noteH{(à une constante près ?)}, this corresponds to the probability of the second instance given the first one with standard deviation $\sigma$. An interesting property of this kernel function is its ability to measure similarity as it converges to zero as the distance between both data-points increase and the point thus becoming more and more dissimilar. RBF are known to have excellent generalization capabilities.
+    \begin{equation}
+        K(x_i,x_j) = e^{\frac{-\norm{x_i-x_j}^2}{2\sigma^2}}
+    \end{equation}
+    \item \textbf{Polynomial kernel function:} this kernel function also has one hyper-parameter $d$. In the practice, $d=2$ is often chosen as higher order tend to overfit.
+    \begin{equation}
+        K(x_i,x_j) = (x_i \cdot x_j +1)^d
+    \end{equation}
+\end{itemize}
+
+Due to their strong generalization power, RBF kernel generally perform better than other kernels, especially if no additional knowledge of the data is available or multiclass problems as the different classes often are often more diverse and require more generalization. In the case of intrusion detection systems, RBF kernel functions also tend to show better results \cite{Kuang2014ADetection}. Though, other kernels seem to show better results in some specific binary cases \cite{Elkhadir2016IntrusionMethods}. In our case and as we will work with multi-class classifiers, we will also opt for RBF kernel functions.
+
+\subsubsection{Chi-square feature selection}
+Up to new, the idea was to reduce the feature size by constructing new ones as transformations of the original feature vectors. However, one also choose to to select a number of features and just not care about the other ones. Another interesting property would be to be able to reduce the feature size in a supervised way, taking the machine learning algorithm into account. This can be tackled with $\chi^2$-feature reduction.
+
+This feature selection method is based on the $\chi^2$ statistical hypothesis test that measures the dependence of two variables.
+
+
+
+
+
+$\chi^2$-feature reduction test have successfully been applied to some machine learning algorithms for intrusion detection systems and seem to deliver better results than PCA or KPCA \cite{SumaiyaThaseen2017IntrusionSVM}.

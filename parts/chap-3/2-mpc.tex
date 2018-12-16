@@ -1,26 +1,3 @@
-\chapter{Achieving the preservation of privacy}
-\label{cha:3}
-This chapter explains the cryptographic tools used for the problem.
-
-\section{Cryptography or the protection of messages}
-A general introduction on cryptography: history, symmetric, asymmetric, some protocols as we will use TCP channels normally.
-
-\section{Different approaches on privacy-friendliness}
-In a world of constant data exchange between different entities, it might be usefull to develop methods not only to protect data during the transit as described before, but also when in possession of an entity that should not be able to read all of it. This is of particular interest for computation outsourcing where a specific data-set has to be processed by an external entity that should not be able to infer anything more than what is asked from it. Furthermore, it might even be wished that one or more external entities might not be able to read the output of their computations, solely readable by the owner(s) of the data. This is of particular interest for the --- now everywhere --- cloud solutions. A protocol that respects the private character of data when treated by other entities than the owner is called \emph{privacy-friendly} or \emph{privacy-preserving}. There exists different approaches to privacy-friendliness and for the stake of completeness, hereafter follows a short survey of them which also justifies our choice.
-
-\subsection{Differential privacy}
-Instead of encrypting all the data, one could alternatively directly address the core problem of why we want them encrypted: to prevent other parties to get any information on what data we possess. In the case that will interest us in this thesis, we will be in possession of a lot of data from personal users which is confidential and can therefore not be traced back to the user. In 2009, Netflix launched the Neltfix prize on data recommendation: the first group to improve their recommendation score by 10\% or more would win 1.000.000\$. They provided a data-set to let the participants train their models and took care of anonymising the data before they made it accessible. However, Narayanan and Shmatikov showed how they could re-identify a lot of the users using the scores of the users on IMDb. \emph{Differential privacy} \cite{Dwork2008DifferentialResults} addresses this problem by adding noise to the data and thereby achieving a better anonymisation. In this way, the data is still usable for statistical models but cannot be used to identify anyone as easily as before. Still, differential privacy is limited by the fundamental and intrinsic relation between anonymisation and statistical relevance. One cannot obtain the first without inevitably having an influence on the second one, and reciprocally.
-
-\subsection{Homomorphic encryption}
-Differential analysis is a statistical approach of anonymity, but there exists also some cryptographic approach, where the external entity is not able to read the results of what it produces. It is possible to construct a protocol with one or more third parties in a way that they cannot possibly learn anything from what they are receiving nor what they are sending back: the information is processed in an encrypted and not a clear form. Encryption schemes that allow mathematical operations to be executed on the encrypted data are called \emph{homomorphic} and was first proposed by Rivest et al. in 1978. For example, the RSA encryption scheme preserves the multiplication over the encrypted data. As a reminder, the RSA encryption scheme is given by $\mathscr{E}(m)=m^e \mod N$. We thus have $\mathscr{E}(m_1) \cdot  \mathscr{E}(m_2) = \left(m_1^e \mod N \right)\left(m_2^e \mod N \right) = \left(m_1m_2\right)^e \mod N = \mathscr{E}(m_1m_2)$. Unfortunately, this property is only true for multiplication and is therefore quite limited in its applications. We therefore refer to RSA as a \emph{somewhat-homomorphic} encryption scheme (SHE). When all mathematical operations are possible, we say from the encryption scheme that it is \emph{fully-homomorphic} (FHE). Up to now, sole some schemes based on finite fields possess this property. 
-
-The most accomplished method up to now is called the \emph{Approximate Eigenvector Method} and is based on the \emph{Learning With Errors} (LWE) encryption scheme, which is also known for still being secure in a post-quantum era. If $C_1$ and $C_2$ are two matrices with common eigenvector $\vec{s}$, we notice that the sum or multiplication of their respective eigenvalues $m_1$ and $m_2$ corresponds to the eigenvalue of the sum or multiplication of $C_1$ and $C_2$ with respect to $\vec{s}$. The eigenvector act as a private key and the eigenvalues as the secrect messages. The scheme is thus fully homomorphic. However, eigenvectors are easy to find and the scheme is thus also insecure. To resolve this, the method uses approximate eigenvectors $\vec{s}C=m\vec{s}+\vec{e}\approx m\vec{s}$ which is known to be still solvable in finite fields under a few assumptions about the error $\vec{e}$.
-
-\subsection{Multi-party computation}
-When different parties participate to the input, the homomorphic encryption described above cannot be used anymore: all parties have to share the same secret key which makes their data still private with respect to the third party, but not to each other. Multi-party computation address this problem. Furthermore, it also allows the parties to compute a common function on their private inputs without needing one or more third parties. 
-
-More concretely, let us now imagine a problem where the goal is to compute some common function $f$ over private inputs $x_i$. On other words we want to compute $f\left(x_1, \, \ldots, \, x_n\right) = \left( y_1, \, \ldots , \, y_n\right)$ where each input $x_i$ is privately provided by player $i$, which ultimately learns $y_i$ and nothing more: nor the other outputs, not the other inputs. A first naive implementation would be to trust a third party for privately receiving each player's input, computing the function and privately communicating the corresponding responses to everyone. However, it also possible to obtain the same results without the trust of a third party, where the sole players are participating to the protocol. This is called \emph{multi-party computation} (MPC) also referred to as \emph{secure multi-party computation} (SMC). This approach has been chosen to solve our problem and will be now more extensively described in the next section.
-
 \section{Multi-party computation in a nutshell}
 Multi-party computation originated with the toy example presented by Yao in 1982 \cite{Yao1982ProtocolsComputations} and now known as the \emph{Millionaire's Problem}: two millionaires both want to know who is richer, but none of them want to disclose their fortune nor trust a third party. Other applications of MPC may concern electronic voting or solutions of private-data as a service (PDaaS).
 
@@ -151,30 +128,3 @@ Unfortunately, it is not possible to adopt the same strategy for multiplication 
 
 
 \paragraph{Boolean operations}
-
-
-\section{Security of the model}
-Semi-honest model + some explanations obout the active case.
-
-
-\subsection{Passive case}
-
-
-
-\subsection{Active case}
-
-
-\section{Key performance indicators}
-Now that we know when a comparison protocol is secure in the Semi honest model, we should discuss when such protocols are considered “good”. This will not be done by defining a single attribute to be good, rather we pick key performance indicators (KPI) so we get a transparent view of the performance different protocols might display in different settings.
-
-\subsection{Communication Complexity}
-The total communication needed by a protocol can be measured by the number of Kilo Bytes (KB) of data which have to be send over a communication line during a protocol. Obviously, a protocol which enforces 1 GB = 10242 KB of communication is not considered a good protocol when compared to another protocol which only needs 100 KB of communication data. Usually, the communication performance of a protocol depends greatly on the bit-length of the input. So in order to keep the performance evaluation fair, one should make sure to optimize the total communication as good as possible considering a given input length ? for the protocol.
-
-\subsection{Round Complexity}
-In many applications, the number of communication rounds tends to be the bottle neck of a protocol. This is due to the fact that a lot of overhead capacity might be needed to initiate and terminate a (secure) communication line between the other party. In general, however, this really depends on the communication technology used in practise. We use Toft’s definition of a round of communication, because it gives us a workable and intuitive definition of this concept. Toft argues that a communication round consists of sending information to other parties and performing a limitless number of arithmetic computations with a sole restriction: variables which are received by a party during this round can not be used in any arithmetic operation performed by that party in the same round.
-
-\subsection{Bandwidth}
-The bandwidth of a protocol is given by the maximum number of bits send during a single communication round. This performance indicator strikes an interesting issue consider the previous two KPI. When the communication complexity of a protocol doesn’t change, but we manage to decrease the round complexity, then odds are that the necessary bandwidth for the protocol will increase. This is obviously not always the case, but shows that we might encounter some trade off considering these KPI. Note that when one finds the necessary bandwidth of a protocol to hight in practise, one can always implement the rounds with the highest communication complexity complexity as two separate communications to decrease the bandwidth.
-
-\subsection{Computational Complexity}
-This KPI is mentioned way less in recent literature than the previous ones. Which is one of the main reasons why this research project exists in the first place. The Computational complexity is measured as the amount of time it takes ones CPU to compute the desired result of a protocol. This KPI is shunned so often as it takes a lot of extra time and effort to implement the proposed protocol. To our knowledge, the only secure comparison protocol, described in the next chapter, for which the computation complexity was studied previous to our research, was that of Garbled Circuits.

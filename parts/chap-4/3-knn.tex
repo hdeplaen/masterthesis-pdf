@@ -1,0 +1,68 @@
+\section{Nearest neighbours}
+
+\subsection{Algorithms and complexity}
+The distances are then sorted to find the $k$ smallest ones. This can be done in different manners:
+\begin{itemize}
+    \item The first idea is to compute all distances which has a complexity $\mathcal{O}\left(nd\right)$ and then go $k$ times through those distances to find the $k$ smallest ones, which has complexity $\mathcal{O}\left(nk\right)$. This algorithm, which calculates the distances, stores them and go $k$ times through them has total complexity $\mathcal{O}\left(nd+nk\right)$, but requires $\mathcal{O}\left(n\right)$ extra memory
+    \item An alternative could be to avoid the storing of the distances and compute them during the classifying. The algorithm goes $k$ through all observations as before, but computes the distance at that moment. The advantage is the requirement of no extra memory, however the computational complexity becomes $\mathcal{O}\left(ndk\right)$.
+    \item A third alternative could be to use Hoare's \emph{quickselect} algorithm \cite{Hoare:1961:AF:366622.366647}. This algorithm is able to find the $k$\textsuperscript{th} smallest --- alternatively biggest --- elements of a list in best case scenario $\mathcal{O}\left(n\right)$ and worst case scenario $\mathcal{O}\left(n \log n\right)$. The practice shows that the algorithm tends to obtain a complexity closer to the best case than the worst case scenario. Using this algorithm, one could hope to obtain a $k$-NN computational complexity of $\mathcal{O}\left(nd\right)$. In more details, the algorithm uses an auxiliary subroutine that reorganises a given partition --- specified by two indices --- into elements smaller than a given pivot point left of it and bigger, right of it. The main algorithm then makes recursive calls to that same subroutine until the pivot ends at the $k$\textsuperscript{th} position. The algorithm and its subroutine are given at \ref{alg:knn-1} and \ref{alg:knn-2}.
+\end{itemize}
+
+\begin{center}
+\begin{algorithm}[H]
+ \KwData{list $\left\{y_i\right\}$, partition start index $i_{a}$, partition end index $i_{b}$, pivot index $i_{p}$}
+ \KwResult{new pivot index $j_p$, sorted list $\left\{y_j\right\}$ of $\left\{y_{i_{a}} , \ldots , y_{i_{b}}\right\}$ where $\forall j < j_{p} : y_j < y_{i_{p}}$, $\forall j > j_{p} : y_j > y_{i_{p}}$ and $y_{j_{p}} = y_{i_{p}}$}
+ \DontPrintSemicolon
+  \SetKwFunction{FPartition}{partition}
+  \SetKwProg{Fn}{function}{:}{}
+  \Fn{\FPartition{$\left\{y_i\right\}$, $i_a$, $i_b$, $i_p$}}{
+ $p \leftarrow y_{i_{p}}$\;
+ $l \leftarrow a$\;
+ \For{ $i = i_a$ \KwTo $i_b-1$}{
+  \If{$y_i < p$}{
+   swap $y_i$ and $y_k$\;
+   $k \leftarrow k+1$\;
+   }
+   swap $y_b$ and $y_k$
+ }
+ $j_p \leftarrow l$\;
+ \Return{$j_p$, $\left\{y_j\right\}$}}
+ \caption{Quickselect's partition subroutine}
+ \label{alg:knn-1}
+\end{algorithm}
+\end{center}
+
+\begin{center}
+\begin{algorithm}[H]
+ \KwData{list $\left\{y_i\right\}$, partition start index $i_{a}$, partition end index $i_{b}$, number of smallest elements wanted $k$}
+ \KwResult{new list $\left\{y_j\right\}$ containing $k$ smallest elements}
+ \DontPrintSemicolon
+  \SetKwFunction{FSelect}{select}
+  \SetKwFunction{FPartition}{partition}
+  \SetKwProg{Fn}{function}{:}{}
+  \Fn{\FSelect{$\left\{y_i\right\}$, $i_a$, $i_b$, $k$}}{
+\eIf{$i_a = i_b$}{
+\Return $\left\{y_1 , \ldots , y_{i_a}\right\}$}{
+$l, \left\{y_j\right\} \leftarrow$ \FPartition{$\left\{y_i\right\}$, $i_a$, $i_b$, $l$}
+\tcp*[r]{assign random $l$ if not already assigned} \;
+\uIf{$k=l$}{
+\Return{$\left\{y_1 , \ldots , y_k\right\}$}}
+\uElseIf{$k<l$}{
+\Return{\FSelect{$\left\{y_i\right\}$, $i_a$, $l+1$, $k$}}}
+\uElse{\Return{\FSelect{$\left\{y_i\right\}$, $l+1$, $i_b$, $k$}}}
+}
+}
+ \caption{Quickselect's main routine}
+ \label{alg:knn-2}
+\end{algorithm}
+\end{center}
+
+
+\subsection{Feature reduction applied to $k$-NN}
+
+
+
+
+
+
+\subsection{Combining condensed nearest neighbours with feature reduction}
