@@ -8,7 +8,7 @@ More concretely, let's first consider a binary classifier of observations and ta
     \mathrm{d}^2\left( x_i, x_j \right) = \norm{x_i-x_j}^2 = \sum_{k=1}^d \left( x_{ik}, x_{jk} \right)^2
 \end{equation}
 
-Unlike binary classification algorithms like SVMs, $k$-NN algorithms are suited for multi-class problems without requiring any expert construction. However, they have also been used for binary classification in an expert construction \cite{Aburomman2016ASystem}. 
+Unlike binary classification algorithms like SVMs, $k$-NN algorithms are suited for multi-class problems without requiring any construction. However, they have also been used for binary classification in a construction \cite{Aburomman2016ASystem}. 
 
 \subsection{The $k$-NN algorithm}
 Let's focus now on the multi-class $k$-NN algorithm without any data reduction or optimization. The sole pre-process consists here of input normalization. The results are given at table~\ref{tab:knn-1}. A very interesting property is that 
@@ -50,7 +50,7 @@ Let's focus now on the multi-class $k$-NN algorithm without any data reduction o
     \label{tab:knn-1}
 \end{table}
 
-\section{Condensed Nearest Neighbours Data Reduction}
+\subsection{Condensed Nearest Neighbours Data Reduction}
 The problem of the nearest neighbours algorithm is its time to compute for large database. First, the computation of the distances increases linearly with the number of training points for each test points, thus quadratically if the number the test set has the same size as the training set. Secondly, the finding of the nearest neighbours takes requires O(kn) datapoints ... As we will see, one of the main trade-offs of MPC is the drastic increase in execution time. Therefore, the reduction of data-points becomes a necessity for the use of MPC-based $k$-NN.
 
 The \emph{condensed nearest neighbours data reduction} (CNN) algorithm aims at finding the sole relevant data-points in the whole training set. The unclassified data-points then only need to be compared with the prototype points and not the whole database anymore. It is based on the idea that misclassified data-points lie close to the decision boundary, and one can just keep the data-points near the decision boundary and discard the others. The goal of the algorithm is to classify all training data-points into three categories:
@@ -86,8 +86,9 @@ $s \leftarrow $\FkNN{$k=1$, $x_i$, $\mathcal{R}_1$} \;
 }
 }
 \Return{$\mathcal{R}_1$}
-\caption{The condensed nearest neighbours algorithm. This algorithm relies on an implementation of the $k$-NN, represented here by the $\mathrm{kNN}$ function that takes as input the number of neighbours $k$, the data-points to be classified $x_i$ and the set in which it should search for the neighbours $\mathcal{S}$.}
+\caption{The condensed nearest neighbours algorithm. This algorithm relies on an implementation of the $k$-NN, represented here by the $\mathtt{kNN}$ function that takes as input the number of neighbours $k$, the data-points to be classified $x_i$ and the set in which it should search for the neighbours $\mathcal{S}$.}
 \label{alg:cnn}
 \end{algorithm}
 \end{center}
 
+\FloatBarrier

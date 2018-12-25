@@ -1,8 +1,17 @@
 \chapter{Machine-learning algorithms for intrusion detection systems}
 \label{cha:2}
+The main task in statistical learning is to avoid any \emph{overfitting}: any useless addition of complexity may allow the regression to capture the variance of the specific data-set on which it is trained on top of the underlying relation is it supposed to capture. The regression would then reproduce the training set itself instead of generalising it. I therefore would like to cite John von Neumann
+\begin{displayquote}
+\emph{With four parameters I can fit an elephant, and with five I can make him wiggle his trunk.}
+\end{displayquote}
+
+In other words, one parameter is sufficient to add a lot of complexity to the model and increase a lot the risk of overfitting. The general rule of thumb is thus to always reduce as much as possible the complexity of the model and always stick to the lowest one able to reproduce the general scheme of the data. This principle is also known as \emph{Occam's razor}.
 
 \input{parts/chap-2/1-ids.tex}
 \input{parts/chap-2/2-reduction.tex}
 \input{parts/chap-2/3-svm.tex}
 \input{parts/chap-2/4-knn.tex}
 \input{parts/chap-2/5-ensemble.tex}
+\input{parts/chap-2/6-combining.tex}
+
+\FloatBarrier

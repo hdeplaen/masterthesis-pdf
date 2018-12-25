@@ -61,7 +61,7 @@ Here is an attempt of an intuitive understanding of the process. Each input vari
 
 In our case, each feature is first being normalized, i.e. zero mean and unit variance. In other words, the covariance matrix has an unit diagonal and with a feature dimension of $n_f$, we have $tr(\hat{\mathbf{\Sigma}})=n_f$ which corresponds in a certain way to the total variance of the whole feature space. Quite logically, the latter is invariant to any linear transformation as the trace is an invariant to any linear transformation. The main idea behind linear PCA analysis reduction is thus to keep the richness of the data a maximum, thus its total variance, and reducing its dimension a maximum by dropping its smallest contributors. A good measure for the relative importance of each eigenvector, or underlying linear relation, is its fraction or variance contribution given by
 \begin{equation}
-f_j = \lambda_j/\Sigma_{\forall j}\lambda_j = \lambda_j/\tr\left(\hat{\mathbf{\Sigma}}\right)
+f_j = \frac{\lambda_j}{\Sigma_{\forall j}\lambda_j} = \frac{\lambda_j}{\tr\left(\hat{\mathbf{\Sigma}}\right)}
 \end{equation}
 
 One can then choose the input values it decides to keep in descending order of the respective fractions $f_j$.
@@ -81,7 +81,7 @@ Fortunately, there exists a method to compute this easily. Mercer's trick \cite{
 
 To compute the covariance matrix, we first have to centralize the data, which can be easily done with simple matrices multiplication
 \begin{eqnarray}
-    K_{ij}'&=& K_{ij} - \frac{2}{n_f} \sum_k^{n_f}\left( K_{ik}+K_{jk} \right) + \frac{1}{n_f^2} \sum_{l,m,n,o}^{n_f}K_{lm}K_{no} \\
+    K_{ij}'&=& K_{ij} - \frac{2}{n_f} \sum_{k=1}^{n_f}\left( K_{ik}+K_{jk} \right) + \frac{1}{n_f^2} \sum_{l=1,m=1,n=1,o=1}^{n_f}K_{lm}K_{no} \\
     K' &=& K - 1_{n_f}K - K1_{n_f}+ 1_{n_f}K1_{n_f}
 \end{eqnarray}
 where $1_{n_f}$ represents matrices of the size $\left( n_f , n_f \right)$ where all elements are equal to $1/n_f$.
@@ -104,15 +104,34 @@ A very interesting property of the kernel matrix is there is no need for computi
     \end{equation}
 \end{itemize}
 
-Due to their strong generalization power, RBF kernel generally perform better than other kernels, especially if no additional knowledge of the data is available or multiclass problems as the different classes often are often more diverse and require more generalization. In the case of intrusion detection systems, RBF kernel functions also tend to show better results \cite{Kuang2014ADetection}. Though, other kernels seem to show better results in some specific binary cases \cite{Elkhadir2016IntrusionMethods}. In our case and as we will work with multi-class classifiers, we will also opt for RBF kernel functions.
+Due to their strong generalization power, RBF kernel generally perform better than other kernels, especially if no additional knowledge of the data is available or multi-class problems as the different classes often are often more diverse and require more generalization. In the case of intrusion detection systems, RBF kernel functions also tend to show better results \cite{Kuang2014ADetection}. Though, other kernels seem to show better results in some specific binary cases \cite{Elkhadir2016IntrusionMethods}. In our case and as we will work with multi-class classifiers, we will also opt for RBF kernel functions.
 
 \subsubsection{Chi-square feature selection}
-Up to new, the idea was to reduce the feature size by constructing new ones as transformations of the original feature vectors. However, one also choose to to select a number of features and just not care about the other ones. Another interesting property would be to be able to reduce the feature size in a supervised way, taking the machine learning algorithm into account. This can be tackled with $\chi^2$-feature reduction.
+Up to new, the idea was to reduce the feature size by constructing new ones as transformations of the original feature vectors. However, one also choose to to select a number of features and just not care about the other ones. Another interesting property would be to be able to reduce the feature size in a supervised way, taking the machine learning algorithm into account. This can be tackled with $\chi^2$ feature reduction.
 
-This feature selection method is based on the $\chi^2$ statistical hypothesis test that measures the dependence of two variables.
+This feature selection method is based on the $\chi^2$ statistical hypothesis test that measures the dependence of two categorical variables. Two variables are independent if for all categories $A$ and $B$
+\begin{equation}
+    P(A, B) = P(A) \times P(B)
+\end{equation}
+This value is observed to be $N_{AB}$, the frequency of respective categories for each variable $A$ and $B$ happening together. This is value is expected to be
+\begin{equation}
+    E_{AB} = N_{A\cdot} \times N_{\cdot B}
+\end{equation}
+with $N_{A\cdot} = \sum_{\forall B} N_{AB}$ and respectively $N_{\cdot B} = \sum_{\forall A} N_{AB}$. It has been shown \noteH{need reference? Pearson approx. 1900} that the distance between these observed and the expected values follows a $\chi^2$ distribution of \noteH{DF}
+\begin{equation}
+    \chi^2_{DF} \sim T = \sum_{\forall A,B} \frac{\left(N_{AB}-E_{AB}\right)^2}{E_{AB}}
+\end{equation}
+In our case, the problem is that almost all of the input features are non-categorical and all of them are after pre-processing. A solution could be binning\footnote{This is a step of transforming the input data again into categorical data putting into different bins. This is a just a discretization into intervals of the distribution each feature.}. However, this would not allow us to do this while taking the classification algorithm into account and thus creating a selection tailored for the specific classification algorithm. This is why we define here a $\chi^2$ metric to compare the output classification with an expected one. We will only work with two categories, true and false. \noteH{(talk about how the expected values are computed)}. This gives us the following metric
+\begin{eqnarray}
+    \chi^2\mathrm{-metric} &=& \frac{\left(t_p - (tp+fp)N_p \right)^2}{(tp+fp)N_p} + \frac{\left(tn - (f_n+t_n)N_p \right)^2}{(f_n+t_n)N_p} \\
+    &+& \frac{\left(f_p - (t_p+f_p)N_n \right)^2}{ (t_p+f_p)N_n} + \frac{\left(t_n-(f_n+t_n)N_p \right)^2}{(f_n+t_n)N_p}
+\end{eqnarray}
+Based on this metric, we can now now select the relevant features in an iterative manner. Each feature is temporary deleted and the resulting model is tested through this metric. If the metric is smaller than a certain threshold, it is definitely deleted and otherwise restored. The process can then start again with a new feature until all have been tested. Of course, the algorithm performance depends on the order in which the features are tested.
 
+\noteH{eventually add an algorithm block}
 
+The threshold depends on depends on the hypothesis tested. \noteH{add explanation on this}.
 
+It has been observed that $\chi^2$ feature selection performs very well against multi-class data-sets compared to other feature selection methods \cite{Yang:1997:CSF:645526.657137}. It has also successfully been applied to some cases of intrusion detection systems and seem to deliver better results than PCA or KPCA \cite{SumaiyaThaseen2017IntrusionSVM}.
 
-
-$\chi^2$-feature reduction test have successfully been applied to some machine learning algorithms for intrusion detection systems and seem to deliver better results than PCA or KPCA \cite{SumaiyaThaseen2017IntrusionSVM}.
+\FloatBarrier

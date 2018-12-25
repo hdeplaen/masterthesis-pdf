@@ -59,13 +59,13 @@ This protocol has been generalised to more than two parties \cite{Ishai1997Priva
         \label{tab:ang-garb}
 \end{figure}
 
-It is interesting to note that the secure evaluation of a sole AND-gate does not respect the principles of the multi-party computation, by definition of the AND-gate. Indeed, if the final solution is 1, both players know their respective input value, which is thus disclosed\footnote{This is not the case for the XOR-gate as an 1-output has two corresponding inputs possible, as has the 0-output}. Therefore, the total functions evaluated have to be totally surjective for each input. The circuit corresponding to the Millionaire's problem is given at figure~\ref{c2:yao-comp} and while it consists of AND-gates, the function is totally subjective with respect to each millionaire's fortune.
+It is interesting to note that the secure evaluation of a sole AND-gate does not respect the principles of the multi-party computation, by definition of the AND-gate. Indeed, if the final solution is 1, both players know their respective input value, which is thus disclosed\footnote{This is not the case for the XOR-gate as an 1-output has two corresponding inputs possible, as has the 0-output}. Therefore, the total functions evaluated have to be totally surjective for each input. The circuit corresponding to the Millionaire's problem is given at figure~\ref{privacy:yao-comp} and while it consists of AND-gates, the function is totally subjective with respect to each millionaire's fortune.
 
 \begin{figure}[ht!]
     \centering
-    \includegraphics[width=.7\textwidth]{parts/chap-3/img/yao-comp.jpg}
+    \includegraphics[width=.7\textwidth]{parts/chap-3/img-3/yao-comp.jpg}
     \caption{The figital comporator is the boolean circuit used to soleve Yao's millionnaire problem.} 
-    \label{c2:yao-comp}
+    \label{privacy:yao-comp}
 \end{figure}
 
 This protocol executes in polynomial time, but there exists a lots of optimisations that allow to garble and evaluate the gates more rapidly.
