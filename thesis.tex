@@ -25,7 +25,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{wrapfig}
-%\usepackage[font=small,labelfont=sc]{caption}
+\usepackage[font=small,labelfont=sc]{caption}
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{csquotes}
@@ -93,11 +93,16 @@
 \newcommand{\noteH}[1]{{\color{red} \textit{#1}}}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
+\newcommand{\secret}[1]{\langle #1 \rangle}
+\newcommand{\secretI}[1]{\langle \bar{#1} \rangle}
+\newcommand{\secretF}[1]{\langle \tilde{#1} \rangle}
+
+
 %% OTHERS
 \DeclareMathOperator{\tr}{tr}
 
 %% BIBLIOGRAPHY
-\usepackage[backend=biber,style=ieee,url=false,dashed=false,doi=false,bibwarn=false]{biblatex}
+\usepackage[backend=biber,style=ieee,url=false,dashed=false,doi=false,bibwarn=false,sorting=nyt]{biblatex}
 \addbibresource{misc/references.bib}
 %\usepackage{cite}
 
@@ -140,6 +145,8 @@
 \appendix
 \include{app/matlab}
 \include{app/scale}
+\include{app/quickselect}
+\include{app/results}
 
 \backmatter
 %\bibliographystyle{ieeetr}

@@ -1,13 +1,22 @@
-DEFINITION OF THE PROBLEM
+\subsubsection{Kernel principal components analysis and Mercer's trick}
 
 
+Therefore, we may now compute the covariance matrix in the mapped space $\phi\left( \mathcal{F} \right)$ of the feature space $\mathcal{F}$
+\begin{equation}
+    \hat{\Sigma}_{\phi} = \frac{1}{n_f} \sum_{x_i,x_j \in \mathcal{F}} \left( \phi(x_i) - \mathrm{mean} \right) \cdot \left( \phi(x_j) - \mathrm{mean} \right)
+\end{equation}
 
+Fortunately, there exists a method to compute this easily. Mercer's trick \cite{Minh2006MercersSmoothing}, also known as \emph{the kernel trick} can be used when an algorithm is based on the sole scalar product between feature vectors instances. It can then be replaced by a \emph{kernel matrix} representing the scalar product of the transformations.
+\begin{equation}
+    K_{ij} = K(x_i,x_j) = \phi(x_i) \cdot \phi(x_j)
+\end{equation}
 
+To compute the covariance matrix, we first have to centralize the data, which can be easily done with simple matrices multiplication
+\begin{eqnarray}
+    K_{ij}'&=& K_{ij} - \frac{2}{n_f} \sum_{k=1}^{n_f}\left( K_{ik}+K_{jk} \right) + \frac{1}{n_f^2} \sum_{l=1,m=1,n=1,o=1}^{n_f}K_{lm}K_{no} \\
+    K' &=& K - 1_{n_f}K - K1_{n_f}+ 1_{n_f}K1_{n_f}
+\end{eqnarray}
+where $1_{n_f}$ represents matrices of the size $\left( n_f , n_f \right)$ where all elements are equal to $1/n_f$.
 
+We can now perform a diagonalization on this new covariance matrix of the transformed data-points and perform the classification on them. This method is called \emph{kernel principal components analysis} (KPCA). 
 
-ALGORITHMS TO BE IMPLEMENTED
-Hybrid
-Ensemble
-K-NN
-NN (backprop)
-SVM

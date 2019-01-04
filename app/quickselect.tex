@@ -1,0 +1,56 @@
+\chapter{The Quickselect algorithm}
+\label{app:qs}
+
+The \emph{quickselect} algorithm uses an auxiliary subroutine that reorganizes a given partition --- specified by two indices --- into elements smaller than a given pivot point left of it and bigger, right of it. The main algorithm then makes recursive calls to that same subroutine until the pivot ends at the $k$\textsuperscript{th} position. The algorithm and its subroutine are given at \ref{alg:knn-qs-1} and \ref{alg:knn-qs-2}.
+
+\begin{center}
+\begin{algorithm}[H]
+ \KwData{list $\left\{y_i\right\}$, partition start index $i_{a}$, partition end index $i_{b}$, pivot index $i_{p}$}
+ \KwResult{new pivot index $j_p$, sorted list $\left\{y_j\right\}$ of $\left\{y_{i_{a}} , \ldots , y_{i_{b}}\right\}$ where $\forall j < j_{p} : y_j < y_{i_{p}}$, $\forall j > j_{p} : y_j > y_{i_{p}}$ and $y_{j_{p}} = y_{i_{p}}$}
+ \DontPrintSemicolon
+  \SetKwFunction{FPartition}{partition}
+  \SetKwProg{Fn}{function}{:}{}
+  \Fn{\FPartition{$\left\{y_i\right\}$, $i_a$, $i_b$, $i_p$}}{
+ $p \leftarrow y_{i_{p}}$\;
+ $l \leftarrow a$\;
+ \For{ $i = i_a$ \KwTo $i_b-1$}{
+  \If{$y_i < p$}{
+   swap $y_i$ and $y_k$\;
+   $k \leftarrow k+1$\;
+   }
+   swap $y_b$ and $y_k$
+ }
+ $j_p \leftarrow l$\;
+ \Return{$j_p$, $\left\{y_j\right\}$}}
+ \caption{Quickselect's partition subroutine}
+ \label{alg:knn-qs-2}
+\end{algorithm}
+\end{center}
+
+\begin{center}
+\begin{algorithm}[H]
+ \KwData{list $\left\{y_i\right\}$, partition start index $i_{a}$, partition end index $i_{b}$, number of smallest elements wanted $k$}
+ \KwResult{new list $\left\{y_j\right\}$ containing $k$ smallest elements}
+ \DontPrintSemicolon
+  \SetKwFunction{FSelect}{select}
+  \SetKwFunction{FPartition}{partition}
+  \SetKwProg{Fn}{function}{:}{}
+  \Fn{\FSelect{$\left\{y_i\right\}$, $i_a$, $i_b$, $k$}}{
+\eIf{$i_a = i_b$}{
+\Return $\left\{y_1 , \ldots , y_{i_a}\right\}$}{
+$l, \left\{y_j\right\} \leftarrow$ \FPartition{$\left\{y_i\right\}$, $i_a$, $i_b$, $l$}
+\tcp*[r]{assign random $l$ if not already assigned} \;
+\uIf{$k=l$}{
+\Return{$\left\{y_1 , \ldots , y_k\right\}$}}
+\uElseIf{$k<l$}{
+\Return{\FSelect{$\left\{y_i\right\}$, $i_a$, $l+1$, $k$}}}
+\uElse{\Return{\FSelect{$\left\{y_i\right\}$, $l+1$, $i_b$, $k$}}}
+}
+}
+ \caption{Quickselect's main routine}
+ \label{alg:knn-sq-2}
+\end{algorithm}
+
+This algorithm has been implemented but the compilation results in an infinite loop. As the MAMBA language first develops all the python code, it develops the function containing the recursive call the that same function and adds it to the SCALE code. It does so with the new call and adds the new recursive call to the SCALE code. This goes on forever. Classical loops are also fully developed. The only way to really execute a loop is to use certain specific calls to specially developed routines that allow real loops on the SCALE code. Unfortunately, no such routines exist for recusrive calls.
+
+\end{center}

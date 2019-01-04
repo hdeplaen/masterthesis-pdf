@@ -1,7 +1,5 @@
 \section{Nearest neighbour}
-+ on validating the models (cross-validation not needed as we have plenty of data-points -- more than needed ---, use of a classical independent test set)
-
-A first classification algorithm that often used in intrusion detection systems is the $k$-nearest neighbour ($k$-NN). This is a simple and effective method based on the distance of the elements in the feature space. Intuitively, when we want to characterize new data elements, we compare it to existent data elements and try to assign to it the characteristics --- in this case, the intrusion target --- of the similar ones. In other words, the test set elements are classified as similar training elements. Though, how do we count to elements to be similar, how do we measure similarity? In the $k$-NN algorithm, the elements are considered as data-points in the feature space and the similarity is measured as the euclidean distance between them. The most common target of the similar elements is then assigned to the test element.
+A classification algorithm that is often used in intrusion detection systems is the $k$-nearest neighbour ($k$-NN). This is a simple and effective method based on the distance of the elements in the feature space. Intuitively, when we want to characterize new data elements, we compare it to existent data elements and try to assign to it the characteristics --- in this case, the intrusion target --- of the similar ones. In other words, the test set elements are classified as similar training elements. Though, how do we count to elements to be similar, how do we measure similarity? In the $k$-NN algorithm, the elements are considered as data-points in the feature space and the similarity is measured as the euclidean distance between them. The most common target of the similar elements is then assigned to the test element.
 
 More concretely, let's first consider a binary classifier of observations and targets $\left( x_1, y_1 \right), \ldots , \left( x_n, y_n \right)$ where observations $x_i \in \mathbb{R}^d$ and targets $y_i \in \left\{0,1\right\}$. To classify a new observation $\left( x_i, y_i \right)$, one just have to compare it to the $k$ other nearest observations and assign to the test observation the dominant target among its $k$ neighbours. In the classical $k$-NN algorithm, the neighbours are defined by the Euclidean distance. However, because of the monotony of the square function, one may use the square of the distances instead, avoiding to compute an extra square root, which is very useful in frameworks where operations are expensive like MPCs:
 \begin{equation}
@@ -9,46 +7,6 @@ More concretely, let's first consider a binary classifier of observations and ta
 \end{equation}
 
 Unlike binary classification algorithms like SVMs, $k$-NN algorithms are suited for multi-class problems without requiring any construction. However, they have also been used for binary classification in a construction \cite{Aburomman2016ASystem}. 
-
-\subsection{The $k$-NN algorithm}
-Let's focus now on the multi-class $k$-NN algorithm without any data reduction or optimization. The sole pre-process consists here of input normalization. The results are given at table~\ref{tab:knn-1}. A very interesting property is that 
-
-\begin{table}[ht!]
-    \centering
-    \begin{tabularx}{\textwidth}{lcccccc}
-    \hlineI
-    Model & Normal & Probe & Dos & U2R & R2L & Total \\ \hlineI
-    $k=1$ and $n=500$ & & & & & &\\
-    Accuracy [\%] & 76.83 & 93.51 & 92.91 & 92.02 & 80.36 & \\
-    TP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    TN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\ \hline
-    
-    $k=7$ and $n=500$ & & & & & &\\
-    Accuracy [\%] & 76.03 & 93.35 & 91.14 & 91.38 & 82.28 & \\
-    TP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    TN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\ \hline
-    
-    $k=1$ and $n=15000$ & & & & & &\\
-    Accuracy [\%] & 75.79 & 94.56 & 91.66 & 98.89 & 81.14 & \\
-    TP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    TN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\ \hline
-    
-    $k=7$ and $n=15000$ & & & & & &\\
-    Accuracy [\%] & 74.52 & 94.46 & 90.28 & 99.56 & 82.57 & \\
-    TP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    TN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FP [\%] & 1 & 1 & 1 & 1 & 1 & 1\\
-    FN [\%] & 1 & 1 & 1 & 1 & 1 & 1\\ \hlineI
-    \end{tabularx}
-    \caption{Detailed results of the $k$-NN classification algorithm for two different values of the number of neighbours $k$ and for a big and a small training data-set. The accuracy, true positive rate (TP), true negative rate (TN), false positive rate (FP) and false negative rate (FN) are given for each target class.}
-    \label{tab:knn-1}
-\end{table}
 
 \subsection{Condensed Nearest Neighbours Data Reduction}
 The problem of the nearest neighbours algorithm is its time to compute for large database. First, the computation of the distances increases linearly with the number of training points for each test points, thus quadratically if the number the test set has the same size as the training set. Secondly, the finding of the nearest neighbours takes requires O(kn) datapoints ... As we will see, one of the main trade-offs of MPC is the drastic increase in execution time. Therefore, the reduction of data-points becomes a necessity for the use of MPC-based $k$-NN.
@@ -90,5 +48,3 @@ $s \leftarrow $\FkNN{$k=1$, $x_i$, $\mathcal{R}_1$} \;
 \label{alg:cnn}
 \end{algorithm}
 \end{center}
-
-\FloatBarrier
