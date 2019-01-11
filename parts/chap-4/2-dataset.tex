@@ -1,4 +1,42 @@
-\section{The NSL-KDD dataset}
-Big table explaining the different features.
+\section{The NSL-KDD data-set}
+For the benchmark and testing of the model, the NSL-KDD data-set was used~\cite{Tavallaee:2009:DAK:1736481.1736489,Dhanabal2015AAlgorithms}. This data-set is an enhanced version of the KDDCUP'99 \cite{Stolfo2000Cost-basedExposition,Dua:2017} data-set originally built upon 4GB of compressed raw traffic data captured during 7 weeks. The KDDCUP'99 extracted a little bit less than 5 million single connections as vectors of 41 different features. It has then been the most used data-set for evaluation of intrusion detection systems. However, it had a few issues such as a lot of redundancy. These issues were solved in the new data-set it was based upon: the NSL-KDD data-set.
 
-Categorical data into numerical. Why frequency and not num for 3. Why bin for 2 and 4.
+\subsection{Attack classes}
+Network attacks detected by intrusion detection systems are highly diversified. In total, about 40 different attack classes exist, but are often regrouped into four main classes
+\begin{itemize}
+    \item \textbf{Normal (67,343 samples):} This just corresponds to a non-attack, a normal connection.
+    
+    \item \textbf{DoS (45,927 samples):} This is a denial of service attack, where the attacker makes the some resources too busy to be able to treat legitimate requests.
+
+    \item \textbf{Probe (11,656 samples):} This is a probing attack where the attacker tries to gain an understanding of the remote victim like the port it is using or the structure of its network.
+    
+    \item \textbf{U2R (52 samples):} In this class, the attacker try to gain an unauthorized access to the root user account starting with a normal user account. These attacks are much more complex as the attacker has to exploit some vulnerabilities of the system. By consequence, they are also a lot less common. The difficulty in this data-set is the little amount of samples of this attack class.
+    
+    \item \textbf{R2L (995 samples):} Here, the attacker tries to gain unauthorized local access from a remote machine. Here again, this attack demands more complex attacks than probing or denial of service, such as sniffing or social engineering. This class suffers thus from the same detection problem as the U2R class, but in a lesser manner.
+\end{itemize}
+
+\subsection{Features and pre-processing}
+The machine-learning algorithms described in chapter~\ref{cha:2} all work with data-points in a hyper-space, meaning that all features have to be numeric values. However, in addition to the output class, 3 of the 41 features are categorical and not numeric. We therefore need to convert these values to numeric ones. 
+
+The first idea it to replace the feature by $n$ new binary features corresponding to the $n$ different categories. However, we must also be careful not augmenting too much the length of the vector to avoid what is called the \emph{curse of dimensionality}. These are problems appearing in high dimensionality hyper-spaces that are not appearing in lower dimensions: as the training set size is fixed, the data-points become more and more isolated as the feature dimension augments. This induces more and more sparsity in the training data-set. 
+
+As we discussed before, new dimensions may also imply more parameters in the final model. This implies more complexity allowed to the models and a greater risk of overfitting. The goal is in fact more to reduce the feature-space size than augmenting it. The first of the three categorical features describes the protocol used by the connection and has a total number of only three different categories. We can thus use this technique and just augmenting the total feature vector dimension from 41 to 43.
+
+The two other categorical feature have respectively 70 and 11 different categories. Using the same method for both would increase the dimension from 43 to 122, a totally unreasonable choice considering the curse of dimensionality and the risk of overfitting. We therefore have to find a method to convert categorical data into a one-dimensional value. In the case of intrusion detection systems, Aburoman et al. have simply mapped the categories to a numeric value ranging from $1$ to $n$~\cite{Aburomman2016ASystem}. However, as many machine-learning algorithms --- and all of the ones used in this thesis and the ones they used in their work --- are based on similarity, measured by distance, this would arbitrarily make two categories similar to each other or not based on the order of the mapping. Conversion using the ASCII mapping has also been used with intrusion detection systems~\cite{Soheily-Khah2018IntrusionDataset}. To still give similarity a coherent meaning after the mapping, we used a frequency conversion: each category is replaced by its frequency in the data-set. Of course, the information is lost, but this is inevitable when reducing dimension.
+
+The feature vector also exists out of a lot of binary values. These can just be considered numeric as such. Table~\ref{tab:nsl-feat} gives a list of the different features after conversion. As can be seen, the different features are quite differing in scales which can be a problem when computing distances for example: a certain feature will take all the weight making the other values non-relevant. We use a simple linear scaling to the interval $\left[-1,1\right]$:
+\begin{equation}
+    x' = 2\frac{x-\mathtt{min}(x)}{\mathtt{max}(x)-\mathtt{min}(x)}-1.
+\end{equation}
+
+We can now hope that all features have the same weight. In this thesis, we will not consider secure normalization, as its main goal is to bring all features to a similar scale. The exact values are not very relevant as long as every party uses the same ones. Normalization can be considered as part of the feature extraction if everyone agrees on common maximum and minimum values.
+
+\LTXtable{\textwidth}{parts/chap-4/2b-table.tex}
+
+\subsection{Training, validation and test sets}
+\label{sec:dataset-bagging}
+Algorithms are always validated using cross-validation\footnote{Instead of using one validation set, $k$-fold cross-validation uses $k$ different training and validation sets sampled from the original training set and performs $k$ different experiments. This is done to try to reduce the dependence on the specific sampling of one training and validation set. $1$-fold cross-validation corresponds to normal validation with a validation set and $n$-fold where $n$ is the size of the data-set is called \emph{leave-one-out}. The more folds are used, the less variant are the performance results, but the more it costs to execute the experiments as they are executed $k$ times.} and the testing is also done using cross-validation to limit the variance of the performance results: multiple experiments are performed and the mean performance is then taken.
+
+The set is divided into a training set and a test set randomly in a way that they have no common samples. The training sets are of variable sizes (depending on the experiments, cf. infra) and the test sets are always fixed to 10,000 samples. Both the test set and the training set are constructed in the following way: we try to have an equal proportion of the different training classes. When a class has not enough samples to attain this proportion (e.g. U2R or sometimes R2L), the maximum possible number of samples is picked while respecting the fact testing and training set have no common elements. This is done to limit the problems of unequal distributions described here above. However, this cannot resolve the issue perfectly as some classes U2R have not enough samples to be comprised in the same proportions as the others.
+
+When validation is needed, the training set is again randomly divided in a new smaller training and validation set (without taking care of proportions). The test sets are never touched to construct the validation sets.

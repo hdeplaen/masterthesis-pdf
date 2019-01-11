@@ -20,3 +20,12 @@ where $1_{n_f}$ represents matrices of the size $\left( n_f , n_f \right)$ where
 
 We can now perform a diagonalization on this new covariance matrix of the transformed data-points and perform the classification on them. This method is called \emph{kernel principal components analysis} (KPCA). 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Performing KPCA with linear support vector machines is not very relevant. Indeed, we should always prefer a support vector machine with radial based kernel functions. Both compute the kernel matrix, but compute the output in different manners. 
+\begin{itemize}
+    \item \textbf{KPCA-SVM} The KPCA will compute a linear combination very likely all $k(x_,x_i)$ and thus all input vectors $x_i$. Each new feature of the transformed data-points will be a linear combination of a radial based function with all the original training data-points of the KPCA. These linear combinations are independent of the classes and are general for the whole data-set. Whatever the number of chosen output features, the new data-point will have to be evaluated through $k(x_,x_i)$ against all original KPCA training data-points.
+    \item \textbf{RBF-SVM} The big advantage of SVM with radial based kernel functions is that the kernel function is used in the SVM and not beforehand, independently of it. The results are thus better. Furthermore, the original training data-points against which a new query point are computed are limited to the number of support vectors, i.e. the ones critical to the boundary. This drastically diminishes their number and improves the evaluation time of a new query point.
+\end{itemize}
+However, some alternative methods use KPCA combined with linear SVMs in some clever way (KPCA-SVM) to approximate RBF-SVM and significantly decrease the training time, but augmenting the evaluation time. This is the opposite trade-off of the one we are looking for and we will thus not consider it.
+

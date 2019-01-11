@@ -1,7 +1,16 @@
 \chapter{The Quickselect algorithm}
 \label{app:qs}
+Hoare's \emph{quickselect} algorithm~\cite{Hoare:1961:AF:366622.366647} is able to find the $k$\textsuperscript{th} smallest --- alternatively biggest --- elements of a list in best case scenario $\mathcal{O}\left(n_t\right)$ and worst case scenario $\mathcal{O}\left(n_t \log n_t\right)$ where $n_t$ is the size of the training set. The practice shows that the algorithm tends to obtain a complexity closer to the best case than the worst case scenario. Using this algorithm, one could hope to obtain a $k$-NN computational complexity of $\mathcal{O}\left(n_tn_f\right)$ where $n_f$ is the feature set size. 
 
-The \emph{quickselect} algorithm uses an auxiliary subroutine that reorganizes a given partition --- specified by two indices --- into elements smaller than a given pivot point left of it and bigger, right of it. The main algorithm then makes recursive calls to that same subroutine until the pivot ends at the $k$\textsuperscript{th} position. The algorithm and its subroutine are given at \ref{alg:knn-qs-1} and \ref{alg:knn-qs-2}.
+It uses an auxiliary subroutine that reorganizes a given partition --- specified by two indices --- into elements smaller than a given pivot point left of it and bigger, right of it. The main algorithm then makes recursive calls to that same subroutine until the pivot ends at the $k$\textsuperscript{th} position. The algorithm and its subroutine are given at \ref{alg:knn-qs-1} and \ref{alg:knn-qs-2} in clear.
+
+For the algorithm to run using MPC, the comparisons of the main routine have to be revealed in order to decide whether or not make a recursive call. The indices $i_a$ and $i_b$ should also be revealed in order to perform the loop of the subroutine. We can however avoid revealing the results of the comparisons of the subroutine by using a secure conditional swap~\cite{Aly2014SecurelyProblems}.
+
+This algorithm has been implemented but the compilation results in an infinite loop. As the MAMBA language first develops all the python code, it develops the function containing the recursive call the that same function and adds it to the SCALE code. It does so with the new call and adds the new recursive call to the SCALE code. This goes on forever. Classical loops are also fully developed. The only way to really execute a loop is to use certain specific calls to specially developed routines that allow real loops on the SCALE code. Unfortunately, no such routines exist for recursive calls.
+
+ The revelation of the comparisons needed to make the (eventual) recursive calls, $i_a$ and $i_b$ would not guarantee the privacy of the algorithm as much information about the relative order of the distances would be revealed. An solution could be to scramble the training set before each evaluation~\cite{QiEfficient}, but at what costs?
+ 
+ Furthermore, the interest for this algorithm has to be nuanced in the case of intrusion detection systems as $k=1$ provides the best results and can already be theoretically achieved in $\mathcal{O}\left(n_t\right)$.
 
 \begin{center}
 \begin{algorithm}[H]
@@ -38,8 +47,8 @@ The \emph{quickselect} algorithm uses an auxiliary subroutine that reorganizes a
   \Fn{\FSelect{$\left\{y_i\right\}$, $i_a$, $i_b$, $k$}}{
 \eIf{$i_a = i_b$}{
 \Return $\left\{y_1 , \ldots , y_{i_a}\right\}$}{
-$l, \left\{y_j\right\} \leftarrow$ \FPartition{$\left\{y_i\right\}$, $i_a$, $i_b$, $l$}
-\tcp*[r]{assign random $l$ if not already assigned} \;
+assign random $l \in \left[i_a,i_b\right]$ \;
+$l, \left\{y_j\right\} \leftarrow$ \FPartition{$\left\{y_i\right\}$, $i_a$, $i_b$, $l$} \;
 \uIf{$k=l$}{
 \Return{$\left\{y_1 , \ldots , y_k\right\}$}}
 \uElseIf{$k<l$}{
@@ -48,9 +57,7 @@ $l, \left\{y_j\right\} \leftarrow$ \FPartition{$\left\{y_i\right\}$, $i_a$, $i_b
 }
 }
  \caption{Quickselect's main routine}
- \label{alg:knn-sq-2}
+ \label{alg:knn-qs-1}
 \end{algorithm}
-
-This algorithm has been implemented but the compilation results in an infinite loop. As the MAMBA language first develops all the python code, it develops the function containing the recursive call the that same function and adds it to the SCALE code. It does so with the new call and adds the new recursive call to the SCALE code. This goes on forever. Classical loops are also fully developed. The only way to really execute a loop is to use certain specific calls to specially developed routines that allow real loops on the SCALE code. Unfortunately, no such routines exist for recusrive calls.
-
 \end{center}
+

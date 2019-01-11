@@ -1,0 +1,132 @@
+\chapter{Implementations}
+\label{app:impl}
+All the code used can be found at \url{https://github.com/hdeplaen/masterthesis-src}.
+
+\section{MATLAB}
+The MATLAB implementation has been constructed as a toolbox. The toolbox is built around the notion of \emph{experts}, which is an entire model as described in the thesis (one-against-all RBFSVMs or $k$-NN with consensed nearest neighbors). The different experts usable are:
+\begin{itemize}
+    \item \verb='knn'=: normal nearest neighbors;
+    \item \verb='kmeans-knn'=: nearest neighbors with $k$-means instance set reduction;
+    \item \verb='knn-cnn'=: consensed nearest neighbors;
+    \item \verb='knn-cnn-chi2'=: condensed nearest neighbors with $\chi^2$ feature selection;
+    \item \verb='par-svm'=: one-against-all (parallel) SVM multi-class model;
+    \item \verb='seq-svm'=: tree-based (sequential) SVM multi-class model;
+    \item \verb='par-svm'=: one-against-all (parallel) SVM multi-class model with $\chi^2$ feature selection;
+    \item \verb='seq-svm'=: tree-based (sequential) SVM multi-class model with $\chi^2$ feature selection.
+\end{itemize}
+
+Here is a short list of the main functions that can be used:
+\begin{itemize}
+    \item \verb=load_data=: extraction of the data-set with conversion from categorical to numerical values (makes use of subroutines \verb=to_numeric=, \verb=cat2freq= and \verb=cat2bin=);
+    \item \verb=normalize_data=: normalizes the data according to the values of the training set;
+    \item \verb=bagging=: creates different training and test sets according to section~\ref{sec:dataset-bagging};
+    \item \verb=pca_reduction=: performs the PCA reduction to the specified number of components;
+    \item \verb=kmeans_clustering=: performs $k$-means clustering according to the training set;
+    \item \verb=train_expert=: generates and expert model with training if required;
+    \item \verb=eval_expert=: evaluates the expert according to the test set;
+    \item \verb=plot_perf=: computes and eventually plots the performance of the classifier on the test set;
+    \item \verb=export_expert=: exports the expert model for MPC-usage.
+\end{itemize}
+
+More information about each function (e.g. input and output arguments) can be found by typing \verb=help function=, where \verb=function= is the queried function.
+
+Here follows a short example of the toolbox used to load, train, evaluate and export a condensed nearest neighbors expert with PCA reduction:
+\begin{lstlisting}[language=Matlab]
+%% PRELIMINARIES
+k = 1;                  % number of nearest neighbors
+n = 10000;              % number of elements in the training sets
+num_bags = 5;           % number of experiments
+disp_pca = false;       % don't plot the PCA componenets
+expert = 'knn-cnn';     % type of expert used
+data-set = 'nsl-kdd';   % data-set used
+
+% preallocate the experiments results
+corr = zeros(num_bags,5,5);
+accm = zeros(num_bags,5);
+mccm = zeros(num_bags,5);
+kappam = zeros(num_bags,5);
+acc = zeros(num_bags);
+mcc = zeros(num_bags);
+kappa = zeros(num_bags);
+num_nb = zeros(num_bags);
+
+%% GENERATE TRAINING AND TEST SETS
+[trainX,trainY,testX,testY] = load_kdd(data_set,classes_red) ;
+[BagTrainX,BagTrainY] = bagging(n(idxn), num_bags, trainX, trainY) ;
+[BagTestX,BagTestY] = bagging(10000, num_bags, testX, testY) ;
+        
+% EXECUTE EACH EXPERIMENT
+for idx_bag = 1:num_bags
+    % extract the corresponding training set for this experiment
+    locX = BagTrainX{idx_bag} ;
+    locY = BagTrainY{idx_bag} ;
+            
+    % extract the corresponding test set for this experiment
+    locXtest = BagTestX{idx_bag} ;
+    locYtest = BagTestY{idx_bag} ;
+            
+    % normalize
+    [locX,locY,locXtest,locYtest] = normalize_data(locX,locY,locXtest,locYtest) ;
+            
+    % PCA
+    [trainX,testX] = pca_reduction(trainX,testX,n_pca,disp_pca) ;
+            
+    %% train and evaluate expert
+    params_knn.k = k ;
+    expert_knn = train_expert(locX,locY, expert, params_knn) ;
+    eval_knn = eval_expert(expert_knn, locXtest, locYtest) ;
+    export_expert(expert_knn, 'MyFirstExpert') ;
+            
+    [corr_, accm_, mccm_, kappam_, acc_, mcc_, kappa_] = plot_perf(eval_knn,locYtest) ;
+    
+    % store the results of each experiment
+    corr(idx_bag,:,:) = corr_ ;
+    accm(idx_bag,:) = accm_ ;
+    mccm(idx_bag,:) = mccm_ ;
+    kappam(idx_bag,:) = kappam_ ;
+    acc(idx_bag) = acc_ ;
+    mcc(idx_bag) = mcc_ ;
+    kappa(idx_bag) = kappa_ ;
+    num_nb(idx_bag) = expert_knn.num_nb ;
+end
+    
+%% PLOT RESULTS
+% mean of all experiments
+corr = round(mean(corr(:,:,:),1));
+accm = mean(accm(:,:),1);
+mccm = mean(mccm(:,:),1);
+kappam = mean(kappam(:,:),1);
+acc = mean(acc(:),1);
+mcc = mean(mcc(:),1);
+kappa = mean(kappa(:),1);
+num_nb = mean(num_nb(:),1);
+
+% display the mean results
+disp('k = 1') ;
+disp('acc');
+disp(squeeze(100*acc) ;
+disp(squeeze(100*accm(:,:)));
+disp('mcc') ;
+disp(squeeze(100*mcc)) ;
+disp(squeeze(100*mccm(:,:)));
+disp('kappa') ;
+disp(squeeze(100*kappa)) ;
+disp(squeeze(100*kappam(:,:)));
+disp('corr') ;
+disp(squeeze(corr(:,:,:))) ;
+\end{lstlisting}
+
+\section{SCALE-MAMBA}
+To compile and run the SCALE-MAMBA code, the framework first has to be installed. The installation and compilation are explained in the documentation~\cite{Aly2018SCALEDocumentation}. The programs have to be used with training data produced by the MATLAB code and place in the \verb=data= folder of each program. The following programs can be found:
+\begin{itemize}
+    \item \verb=knn_1=: Secure nearest neighbors evaluation with $k=1$;
+    \item \verb=knn_chi2=: Secure nearest neighbors evaluation with $k=1$ and $\chi^2$ feature selection;
+    \item \verb=knn_1_pca=: Secure nearest neighbors evaluation with $k=1$ and PCA reduction;
+    \item \verb=knn_n=: Secure nearest neighbors evaluation with $k>1$;
+    \item \verb=svm_lin=: Secure linear support vector machines evaluation;
+    \item \verb=svm_lin_chi2=: Secure linear support vector machines with $\chi^2$ feature selection;
+    \item \verb=svm_lin_pca=: Secure linear support vector machines with PCA reduction (the PCA or SVM evaluation can be done securely or in clear by commenting the corresponding lines);
+    \item \verb=svm_rbf=: Secure support vector machines with radial based kernel function;
+    \item \verb=svm_rbf_chi2=: Secure support vector machines with radial based kernel function with $\chi^2$ feature selection;
+    \item \verb=svm_rbf_pca=: Secure support vector machines with radial based kernel function with PCA reduction.
+\end{itemize}

@@ -33,9 +33,9 @@
         {\chapnumfont \hspace{.7ex}#2\hspace{.7ex}\strut}}%
     \endtabular}}
 \makechapterstyle{kulemtman}{%
-  \def\chapnamefont{\sffamily\large}%
-  \def\chapnumfont{\sffamily\Huge}%
-  \def\chaptitlefont{\sffamily\raggedright\huge}%
+  \def\chapnamefont{\large}%
+  \def\chapnumfont{\Huge}%
+  \def\chaptitlefont{\raggedright\huge}%
   \setlength\beforechapskip\z@skip
   \setlength\midchapskip{29\p@}%
   \setlength\afterchapskip{40\p@}%
@@ -54,17 +54,17 @@
       \leavevmode \leaders\hrule\@height\p@ \hfill \kern\z@ \par
       \chaptitlefont ##1\par}}}
 \makeheadstyles{kulemtman}{%
-  \def\partnamefont{\normalfont\huge\sffamily}%
-  \def\partnumfont{\normalfont\huge\sffamily}%
-  \def\parttitlefont{\normalfont\Huge\sffamily}%
+  \def\partnamefont{\normalfont\huge}%
+  \def\partnumfont{\normalfont\huge}%
+  \def\parttitlefont{\normalfont\Huge}%
   \chapterstyle{kulemtman}%
-  \setsecheadstyle{\Large\sffamily\raggedright}%
-  \setsubsecheadstyle{\large\sffamily\raggedright}%
-  \setsubsubsecheadstyle{\large\sffamily\itshape\raggedright}%
+  \setsecheadstyle{\Large\raggedright}%
+  \setsubsecheadstyle{\large\raggedright}%
+  \setsubsubsecheadstyle{\large\itshape\raggedright}%
   \setparaheadstyle{\normalsize\scshape}%
   \setbeforeparaskip{\medskipamount}}
 \newcommand*\kulemtmanToC{%
-  \let\cftchapterfont\sffamily
+  %\let\cftchapterfont
   \let\cftchapterdotsep\cftdotsep
   \def\cftchapterleader{\normalfont\cftdotfill{\cftchapterdotsep}}%
   \def\cftchapterpagefont{}%

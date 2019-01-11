@@ -1,39 +1,39 @@
 \section{Protocols implemented}
-As said before, we aim here at evaluating a data query of a first party against the database of a second party using various machine-learning algorithms. The goal here is to preserve the privacy of the data of both parties. In the following sections, $\secret{a}_i$ and $\secret{a}_{ij}$ denote a secret in matrix (or array) of secrets and should not be confused with $\secret{a_i}$ which denote a share of the secret in the previous sections. $\secret{A}$ denotes the corresponding matrix. Similarly, we use the notation $\secret{A}_{i:}$ or  $\secret{A}_{:j}$ to denote the vector corresponding to the $i$-th line or $j$-th column of the matrix of secret values.
+As said before, we aim here at evaluating a data query of a first party against the data-base of a second party using various machine-learning algorithms. The goal here is to preserve the privacy of the data of both parties: the query and the model parameters. In the following sections, $\secret{a}_i$ and $\secret{a}_{ij}$ denote a secret in matrix (or array) of secrets and should not be confused with $\secret{a_i}$ which denote a share of Secure in the previous sections. $\secret{A}$ denotes the corresponding matrix. Similarly, we use the notation $\secret{A}_{i:}$ or  $\secret{A}_{:j}$ to denote the vector corresponding to the $i$-th line or $j$-th column of the matrix of secret values.
 
 \subsection{Principal component analysis}
-Let us consider the matrix of the PCA weights $W_{n_p , n_f}$ and a list of queries to be transformed $X_{n_q , n_f}$ were $n_p$ the number of principal components, $n_q$ is the number of queries and $n_f$ the number of features. Transforming these queries into the principal components scores $T_{n_q , n_p}$ described in $W$ just corresponds to the matrix multiplication operation $T=X \cdot W^T$. This operation is securely implemented in algorithm~\ref{alg:sec-pca}.
+Let us consider the matrix of the PCA weights $W_{n_{pca} , n_f}$ and a list of queries to be transformed $X_{n_q , n_f}$ were $n_{pca}$ the number of principal components, $n_q$ is the number of queries and $n_f$ the number of features. Transforming these queries into the principal components scores $T_{n_q , n_{pca}}$ described in $W$ just corresponds to the matrix multiplication operation $T=X \cdot W^T$. This operation is securely implemented in algorithm~\ref{alg:sec-pca}.
 
-As we can see, this simple matrix multiplication has the theoretical computational complexity of the naive matrix multiplication algorithm $\mathcal{O}(n_q n_p n_f)$ which is cubic.
+As we can see, this simple matrix multiplication has the theoretical computational complexity of the naive matrix multiplication algorithm $\mathcal{O}(n_q n_{pca} n_f)$, which is cubic.
 
-There is here total secrecy on the values of the queries and the PCA weights. The only public information are the indices of the loops, but at each operation, a totally opaque operation occurs. To summarize, the secrecy is preserved for all the data except its sizes: the number of principal components kept $n_p$, the number of queries $n_q$ and the number of features $n_f$.
+There is here total secrecy on the values of the queries and the PCA weights. The only public information are the indices of the loops, but inside the loops, a totally opaque operation occurs. To summarize, the secrecy is preserved for all the data except its sizes: the number of principal components kept $n_{pca}$, the number of queries $n_q$ and the number of features $n_f$.
 
 \begin{center}
 \begin{algorithm}[H]
-\KwData{$n_p \times n_f$ matrix of principal components weights $\secretF{W}$ and $n_q \times n_f$ matrix of queries $\secretF{X}$.}
-\KwResult{$n_q \times n_p$ matrix of the $n_p$ first components scores of each query $\secretF{T}$.}
+\KwData{$n_{pca} \times n_f$ matrix of principal components weights $\secretF{W}$ and $n_q \times n_f$ matrix of queries $\secretF{X}$.}
+\KwResult{$n_q \times n_{pca}$ matrix of the $n_{pca}$ first components scores of each query $\secretF{T}$.}
 \DontPrintSemicolon
-initialize $\secretF{T}$ of size $n_q \times n_p$ \;
+initialize $\secretF{T}$ of size $n_q \times n_{pca}$ \;
 \ForEach{$i = 1, \ldots, n_q$}{
-\ForEach{$j = 1,\ldots, n_p$}{
+\ForEach{$j = 1,\ldots, n_{pca}$}{
 \ForEach{$k = 1, \ldots, n_f$}{
 $\secretF{t}_{ij} \leftarrow \secretF{t}_{ij} + \secretF{w}_{jk} \cdot \secretF{x}_{ik}$ \;
 }
 }
 }
 \Return{$\secretF{T}$}
-\caption{The secret PCA evaluation protocol.}
+\caption{Secure PCA evaluation protocol.}
 \label{alg:sec-pca}
 \end{algorithm}
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Linear support vector machines}
-The linear support vector machine protocol is basically the same as the PCA evaluation protocol as it also consists in a matrix multiplication, with the difference that an intercept vector has to be added. The protocol evaluates a linear support vector machine in its primal form which consists of a scalar product that sees a constant added to it. However, as we work with multi-class support vector machines, we have to consider multiple scalar products and similarly, as we work with more than one query, this corresponds to a matrix multiplication in total.
+The linear support vector machine protocol is basically the same as the PCA evaluation protocol as it also consists in a matrix multiplication, with the difference that an intercept vector has to be added. This is the vector containing the bias terms of the different SVMs. The protocol evaluates a linear support vector machine in its primal form which consists of a scalar product that sees a constant added to it. However, as we work with multi-class support vector machines, we have to consider multiple scalar products and similarly, as we work with more than one query, this corresponds to a matrix multiplication in total.
 
 Let us consider now a matrix $W_{n_c,n_f}$ where $n_c$ is the number of classes --- each SVM represents one class --- that contains the primal weights of the linear support vector machine. To that we have to add the intercept vector $B_{n_c}$. The list of queries is the same as before $X_{n_q , n_f}$. The output is a matrix containing the score of for each query on each SVM $S_{n_c,n_q}$. The operation becomes $S = WX^T + B$. The protocol implementing it is given at algorithm~\ref{alg:sec-lsvm}.
 
-The complexity here is similar as before $\mathcal{O}(n_c n_q n_f)$. If we use feature space reduction and the queries are first transformed using the principal component analysis ($n_f$ is reduced to $n_p$), it becomes $\mathcal{O}(n_c n_q n_p)$. However, we eventually have to add the complexity of the PCA evaluation which gives a total of $\mathcal{O}(n_p n_q (n_f+n_c)) > \mathcal{O}(n_c n_q n_f)$ for $n_f,n_c \geq 1$ which is always verified. Hence, we should not expect the linear support vector machines to be more effective using a PCA feature reduction. However, this is not the case for the $\chi^2$-feature reduction linear support vector machine where the complexity is always slower than the full-feature linear support vector machine. Indeed, we have $\mathcal{O}(n_c n_q n_{\chi^2}) < \mathcal{O}(n_c n_q n_f)$ if $n_{\chi^2} < n_f$ which should be the case for a working $\chi^2$ feature selection.
+The complexity is similar as before: $\mathcal{O}(n_c n_q n_f)$. If we use feature space reduction and the queries are first transformed using the principal component analysis ($n_f$ is reduced to $n_{pca}$), it becomes $\mathcal{O}(n_c n_q n_{pca})$. However, we eventually have to add the complexity of the PCA transformation itself, which gives a total of $\mathcal{O}(n_{pca} n_q (n_f+n_c)) > \mathcal{O}(n_c n_q n_f)$ for $n_f,n_c \geq 1$ (which is always verified). Hence, we should not expect the linear support vector machines to be more effective using a PCA feature reduction. However, this is not the case for the $\chi^2$-feature reduction linear support vector machine where the complexity is always slower than the full-feature linear support vector machine. Indeed, we have $\mathcal{O}(n_c n_q n_{\chi^2}) < \mathcal{O}(n_c n_q n_f)$ if $n_{\chi^2} < n_f$ (which should be the case for a working $\chi^2$ feature selection).
 
 Here again, the secrecy is preserved in all the data except the sizes, adding here the size $n_c$ of the $\chi^2$ features kept to the ones already discussed in the subsection above. We could decide to hide $n_c$ by just using a null SVM weight for a coefficient that has been dropped by the selection, but this would not allow to reduce the complexity. This is of no interest as the whole idea of $\chi^2$ feature selection is to increase the evaluation speed.
 
@@ -42,7 +42,7 @@ Here again, the secrecy is preserved in all the data except the sizes, adding he
 \KwData{$n_c \times n_f$ matrix of the $n_c$ different SVM weights $\secretF{W}$, $n_q \times n_f$ matrix of queries $\secretF{X}$ and an intercept vector $\secretF{B}$ of length $n_c$.}
 \KwResult{$n_c \times n_q$ matrix containing the $n_c$ SVM scores for each query $\secretF{S}$.}
 \DontPrintSemicolon
-initialize $\secretF{T}$ of size $n_q \times n_p$ \;
+initialize $\secretF{T}$ of size $n_q \times n_{pca}$ \;
 \ForEach{$i = 1, \ldots, n_q$}{
 \ForEach{$j = 1,\ldots, n_c$}{
 \ForEach{$k = 1, \ldots, n_f$}{
@@ -52,30 +52,30 @@ $\secretF{s}_{ji} \leftarrow \secretF{s}_{ji} + \secretF{b}_j$ \;
 }
 }
 \Return{$\secretF{S}$}
-\caption{The secret linear SVM evaluation protocol.}
+\caption{Secure linear SVM evaluation protocol.}
 \label{alg:sec-lsvm}
 \end{algorithm}
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Support vector machines with radial based functions}
-As a reminder the evaluation of a query $x$ on linear support vector using a kernel functions only is possible in the dual space and is given by
+As a reminder the evaluation of a query $x$ on linear support vector using a kernel functions is only possible in the dual space and is given by
 \begin{equation}
-    \mathtt{SVM}(x) = \sum_{i=1}^{n_s} \alpha_i y_i K(x_i,x) + b
+    \mathtt{SVM}(x) = \sum_{i=1}^{n_{svm}} \alpha_i y_i K(x_i,x) + b,
 \end{equation}
-where $x_i$ are the $n_s$ support vectors $x_i$ and $K(x_i,x)$ the kernel function here given by
+where $x_i$ are the $n_{svm}$ support vectors $x_i$ and $K(x_i,x)$ the kernel function here given by
 \begin{equation}
-    K\left( x_i,x_j\right) = \exp\left(-\frac{\norm{x_i - x_j}^2}{2\sigma^2}\right)
+    K\left( x_i,x_j\right) = \exp\left(-\frac{\norm{x_i - x_j}^2}{2\sigma^2}\right),
 \end{equation}
-With $\sigma^2$ a kernel parameter. Unfortunately, SCALE-MAMBA has no support for exponentiation of secret fixed point integers. This can be easily circumvented using a Taylor expansion of the exponential function
+with $\sigma^2$ a kernel parameter. Unfortunately, SCALE-MAMBA has no support for exponentiation of secret fixed point exponentiation. This can be easily circumvented using a Taylor expansion of the exponential function
 \begin{equation}
-    e^x \approx \sum_{n=0}^{n_e} \frac{x^n}{n!}
+    e^x \approx \sum_{n=0}^{n_e} \frac{x^n}{n!},
 \end{equation}
-with $n_e$ the number of iterations we want to perform (the more the better), but does not allow us to use more effective methods based on square pairs for example for classical exponentiation. The secure radial based kernel function protocol is developed in algorithm~\ref{alg:sec-kernel} using the secure distance computation protocol described in algorithm~\ref{alg:sec-dist}. Once these protocols are defined, we can use the protocol described at algorithm~\ref{alg:sec-rbfsvm} to compute the transformation of the queries into the dual space, which is equivalent to the kernel matrix between the support vectors and the queries. These transformed queries can then be used with the classical linear support vector machines, but with the dual $\alpha_i$ coefficients instead of the primal weights which changes the $n_f$ estimations to $n_s$ in the protocol described at algorithm~\ref{alg:sec-lsvm}. Though, one dual transformation is needed per different SVM.
+with $n_e$ the number of iterations we want to perform (the more the better). The secure radial based kernel function protocol is developed in algorithm~\ref{alg:sec-kernel} using the secure distance computation protocol described in algorithm~\ref{alg:sec-dist}. Once these protocols are defined, we can use the protocol described at algorithm~\ref{alg:sec-rbfsvm} to compute the transformation of the queries into the dual space, which is equivalent to the kernel matrix between the support vectors and the queries. These transformed queries can then be used with the classical linear support vector machines, but with the dual $\alpha_i$ coefficients instead of the primal weights which changes the $n_f$ estimations to $n_{sv}$ in the protocol described at algorithm~\ref{alg:sec-lsvm}. Though, one dual transformation is needed per different SVM.
 
-Let's now have a look at the complexity. The complexity of the transformation is $\mathcal{O}(n_fn_en_s)$ per SVM. As they are $n_c$ different SVMs, this gives $\mathcal{O}(n_cn_fn_en_s)$ for all the transformations. If we add the estimation of the SVMs themselves based on these dual transformations, this gives a total of $\mathcal{O}(n_cn_s(n_q+n_en_f))$. The use of support vectors in the dual makes the complexity of degree 4 and not cubic anymore. The next chapter aims at investigating if this trade-off is worth the cost.
+Let's now have a look at the complexity. The complexity of the dual transformation is $\mathcal{O}(n_fn_en_{svm})$ per SVM. As there are $n_{svm}$ different SVMs, this gives $\mathcal{O}(n_fn_en_{svm}^2)$ for all the transformations. If we add the estimation of the SVMs themselves based on these dual transformations, this gives a total of $\mathcal{O}(n_{svm}^2(n_q+n_en_f))$. The use of support vectors in the dual makes the complexity of degree 4 and not cubic anymore. The next chapter aims at investigating if this trade-off is worth the cost.
 
-Similarly as before, we can also use a PCA transformation before the computation of the support vectors and try to gain speed on the distance computation. As we saw before, the PCA transformation has a cubic complexity and this should thus not change the degree of the estimation, but reduce its factors to $\mathcal{O}(n_cn_s(n_q+n_en_p))$ where $n_p$ is the number of components kept. Computationally speaking, this trade-off here is expected to deliver better results. Using $\chi^2$ selection reduces the complexity to $\mathcal{O}(n_cn_s(n_q+n_en_{\chi^2}))$ which should also deliver better results. The choice between PCA and $\chi^2$ feature selection was trivially favouring the latter for the linear SVM in every case, here it tends to favor the first one if $n_p<n_{\chi^2}$ as the computation PCA evaluation has no significant influence on the complexity here, which was not the case here above.
+Similarly as before, we can also use a PCA reduction before the computation of the support vectors and try to gain speed on the distance computation. As we saw before, the PCA reduction has a cubic complexity and this should thus not change the degree of the estimation, but reduce its factors to $\mathcal{O}(n_{svm}^2(n_q+n_en_{pca}))$ where $n_{pca}$ is the number of components kept. Computationally speaking, this trade-off here is expected to deliver better results. Using $\chi^2$ selection reduces the complexity to $\mathcal{O}(n_{svm}^2(n_q+n_en_{\chi^2}))$ which should also deliver better results. The choice between PCA and $\chi^2$ feature selection was trivially favouring the latter for the linear SVM in every case, here it tends to favor the first one if $n_{pca}<n_{\chi^2}$ as the computation PCA evaluation has no significant influence on the complexity here, which was not the case here above.
 
 \begin{center}
 \begin{algorithm}[H]
@@ -86,7 +86,7 @@ Similarly as before, we can also use a PCA transformation before the computation
 $\secretF{d} \leftarrow \secretF{d} + (\secretF{u}_i-\secretF{v}_i)^2$ \;
 }
 \Return{$\secretF{d}$}
-\caption{The secret distance computation protocol $\mathtt{Dist}$.}
+\caption{Secure distance computation protocol $\mathtt{Dist}$.}
 \label{alg:sec-dist}
 \end{algorithm}
 \end{center}
@@ -101,31 +101,31 @@ $\secretF{v} \leftarrow - \mathtt{Dist}(\secretF{U},\secretF{V}) / \secretF{a}$ 
 $\secretF{d} \leftarrow \secretF{d} + \secretF{v}^i/i!$
 }
 \Return{$\secretF{d}$}
-\caption{The secret radial based kernel function evaluation protocol $\mathtt{Kernel}$.}
+\caption{Secure radial based kernel function evaluation protocol $\mathtt{Kernel}$.}
 \label{alg:sec-kernel}
 \end{algorithm}
 \end{center}
 
 \begin{center}
 \begin{algorithm}[H]
-\KwData{secret matrix of queries $\secretF{X}$ of size $n_q \times n_f$, secret matrix of support vectors $\secretF{S}$ of size $n_s \times n_f$ and secret kernel parameter $\secretF{a}$.}
+\KwData{secret matrix of queries $\secretF{X}$ of size $n_q \times n_f$, secret matrix of support vectors $\secretF{S}$ of size $n_{svm} \times n_f$ and secret kernel parameter $\secretF{a}$.}
 \KwResult{$\secretF{T}$ transformed queries into the dual space.}
 \DontPrintSemicolon
-initialize $\secretF{T}$ of size $n_q \times n_s$ \;
+initialize $\secretF{T}$ of size $n_q \times n_{svm}$ \;
 \ForEach{$i = 1,\ldots, n_q$}{
-\ForEach{$j = 1,\ldots, n_s$}{
+\ForEach{$j = 1,\ldots, n_{svm}$}{
 $\secretF{t}_{ij} \leftarrow \mathtt{Kernel}(\secretF{X}_{i:},\secretF{S}_{j:},\secretF{a})$ \;
 }
 }
 \Return{$\secretF{T}$}
-\caption{The secret dual space transformation protocol.}
+\caption{Secure dual space transformation protocol.}
 \label{alg:sec-rbfsvm}
 \end{algorithm}
 \end{center}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Multi-class evaluation}
-The SVMs only perform binary classification and are combined to perform multi-class classification. To evaluate the one-against-all model, we just have to take the maximum score of each SVM and return the corresponding target. In the protocol described in algorithm~\ref{alg:sec-multi1}, the final score of the wining SVM is not returned and sole the corresponding class is. In the following algorithms, the notation $\secretF{-\infty}$ describes a very small value that is certainly smaller than all SVMs scores (these are typically comprised between -1 and 1 and a value of -1000 suffices). In the very unlikely case where no score is bigger than this value, the algorithm will return the secret index 0. The complexity of the algorithm is equal to $\mathcal{O}(n_qn_c)$ but incorporates for the first time comparisons.
+The SVMs only perform binary classification and are combined to perform multi-class classification. To evaluate the one-against-all model, we just have to take the maximum score of each SVM and return the corresponding target. In the protocol described in algorithm~\ref{alg:sec-multi1}, the final score of the wining SVM is not returned and sole the corresponding class is. In the following algorithms, the notation $\secretF{-\infty}$ describes a very small value that is certainly smaller than all SVMs scores (these are typically comprised between -1 and 1 and a value of -1000 suffices). In the very unlikely case where no score is bigger than this value, the algorithm will return Secure index 0. The complexity of the algorithm is equal to $\mathcal{O}(n_qn_c)$ with $n_c$ the number of classes, but incorporates for the first time comparisons.
 
 Similarly, we can define the algorithm picking the winner for a tree-based model. This is done by picking the index of the highest SVM in the tree returning a positive score. Once a SVM returns a positive score, all next scores become not relevant. However, to preserve the security, we still need to evaluate all SVMs and cannot stop even if the SVM higher in the tree returned one. If we did this, an attacker could just look at the index of the SVM when the algorithm stops to disclose the winning target. The protocol for defining the winning target in the case of a tree-based multi-class model is given at algorithm~\ref{alg:sec-multi2}. In this case, it is not possible that the algorithm returns 0 and finds no winner. The computational complexity is exactly the same as the one-against-all, but $n_c = 4$ and not to 5.
 
@@ -144,7 +144,7 @@ $\secretI{N}_i \leftarrow_{\secretI{b}} \secretI{C}_j : n$ \;
 }
 }
 \Return{$\secretI{N}$}
-\caption{The secret one-against-all multi-class evaluation protocol.}
+\caption{Secure one-against-all multi-class evaluation protocol.}
 \label{alg:sec-multi1}
 \end{algorithm}
 \end{center}
@@ -162,7 +162,7 @@ $\secretI{N}_i \leftarrow_{\secretI{b}} \secretI{C}_j : n$ \;
 }
 }
 \Return{$\secretI{N}$}
-\caption{The secret tree-based multi-class evaluation protocol.}
+\caption{Secure tree-based multi-class evaluation protocol.}
 \label{alg:sec-multi2}
 \end{algorithm}
 \end{center}
@@ -176,13 +176,13 @@ There are different possibilities for implementing the algorithm (we use a minim
 \begin{itemize}
     \item The first idea is to compute all distances which has a complexity $\mathcal{O}\left(n_tn_f\right)$ and then go $k$ times through those distances to find the $k$ smallest ones, which has complexity $\mathcal{O}\left(ln_t\log n_t\right)$. This algorithm, which calculates the distances, stores them and go $k$ times through them has total complexity $\mathcal{O}\left(n_tn_f+kn_t\log n_t \right)$, but requires $\mathcal{O}\left(n_t\right)$ extra memory.
     \item An alternative could be to avoid the storing of the distances and compute them during the classifying. The algorithm goes $k$ through all observations as before, but computes the distance at that moment. The advantage is the requirement of no extra memory, however the computational complexity becomes $\mathcal{O}\left(n_fkn_t \log n_t\right)$.
-    \item A third alternative could be to use Hoare's \emph{quickselect} algorithm \cite{Hoare:1961:AF:366622.366647}. This algorithm is able to find the $k$\textsuperscript{th} smallest --- alternatively biggest --- elements of a list in best case scenario $\mathcal{O}\left(n_t\right)$ and worst case scenario $\mathcal{O}\left(n_t \log n_t\right)$. The practice shows that the algorithm tends to obtain a complexity closer to the best case than the worst case scenario. Using this algorithm, one could hope to obtain a $k$-NN computational complexity of $\mathcal{O}\left(n_tn_f\right)$. Unfortunately, this algorithm uses recursive function calls which are currently not supported in the SCALE-MAMBA framework. More discussion is given in the next sections and in appendix~\ref{app:qs}. As the indices are not secret, this would also reveal part of the sorting pattern, but as the distances are not revealed, triangulation-based attacks would still not be possible.
+    \item A third alternative could be to use Hoare's \emph{quickselect} algorithm~\cite{Hoare:1961:AF:366622.366647}. This algorithm is able to find the $k$\textsuperscript{th} smallest --- alternatively biggest --- elements of a list in best case scenario $\mathcal{O}\left(n_t\right)$ and worst case scenario $\mathcal{O}\left(n_t \log n_t\right)$. The practice shows that the algorithm tends to obtain a complexity closer to the best case than the worst case scenario. Using this algorithm, one could hope to obtain a $k$-NN computational complexity of $\mathcal{O}\left(n_tn_f\right)$. Unfortunately, this algorithm uses recursive function calls which are currently not supported in the SCALE-MAMBA framework. More discussion is given in the next sections and in appendix~\ref{app:qs}. As the indices are not secret, this would also reveal part of the sorting pattern, but as the distances are not revealed, triangulation-based attacks would still not be possible.
 \end{itemize}
 As storing is not really a concern in secret sharing, but the bottleneck is the computation part. The first option has been chosen. The secure $k$-NN evaluation protocol is given at algorithm~\ref{alg:sec-knn} for a unique query. One just has to rerun it $n_q$ times to compute multiple queries. This protocol rests on two other sub-protocols, the first one aims at defining the majority class present in the neighbours and is described at algorithm~\ref{alg:sec-win}. It first consists in a counting of the elements present in the neighbours and searching for the maximum. In case of tie, the highest value tied class is returned. This choice is made to limit the number of false negatives\footnote{This depends on the data-set used in the next chapter. In that data-set the higher classes tend to be more difficultly recognizable. This case is also to be nuanced as the algorithm as we will see performs the best for $k=1$ where no ties are possible.}.
 
 When $k=1$, the part of the algorithm where the majority voting is used can be dropped as well as the need for selecting a minimum higher to the one previously found (which comprises two time more comparisons). For this purpose, two protocols for the computation of a minimum are given. One for the $k=1$ case at algorithm~\ref{alg:sec-min1} and another for $k>1$ at algorithm~\ref{alg:sec-min2}. The reason we have to use a specific protocol for the selection of an minimum when a threshold (the previous minimum for $k-1$) is because it is not possible to modify the current distance array to change the value of the previously found distance or just to suppress that element without revealing its index. Both protocols have complexity $\mathcal{O}(n_t \log n_t)$. For the sake of simplicity, they are referred to by the same name.
 
-The complexity of the protocol for $n_q$ queries is $\mathcal{O}(n_q\{n_tn_f + kn_t \log n_t\})$, $\mathcal{O}(n_q\{n_p(n_t+n_f) + kn_t \log n_t\})$ with PCA feature reduction and $\mathcal{O}(n_q\{n_tn_{\chi^2} + kn_t \log n_t\})$ with $\chi^2$ feature selection.
+The complexity of the protocol for $n_q$ queries is $\mathcal{O}(n_q\{n_tn_f + kn_t \log n_t\})$, $\mathcal{O}(n_q\{n_{pca}(n_t+n_f) + kn_t \log n_t\})$ with PCA feature reduction and $\mathcal{O}(n_q\{n_tn_{\chi^2} + kn_t \log n_t\})$ with $\chi^2$ feature selection.
 
 \begin{center}
 \begin{algorithm}[H]
@@ -200,7 +200,7 @@ $\secretI{t}_i, \secretF{m} \leftarrow \mathtt{Min}(\secretF{D},\secretI{C},\sec
 }
 $\secretI{l} \leftarrow \mathtt{MajVote}(\secretI{T})$ \;
 \Return{$\secretI{l}$}
-\caption{The secret $k$-NN evaluation protocol.}
+\caption{Secure $k$-NN evaluation protocol.}
 \label{alg:sec-knn}
 \end{algorithm}
 \end{center}
@@ -225,7 +225,7 @@ $\secretI{c} \leftarrow 0$ \;
     $\secretI{l} \leftarrow_{\secretI{b}} i : l$ \;
 }
 \Return{$\secretI{l}$}
-\caption{The majority vote evaluation protocol $\mathtt{MajVote}$.}
+\caption{Secure majority vote evaluation protocol $\mathtt{MajVote}$.}
 \label{alg:sec-win}
 \end{algorithm}
 \end{center}
@@ -255,7 +255,7 @@ $\secretF{c'}_{n'-1} \leftarrow \secretF{c}_{n_t-1}$ \;
 }
 \Return{$\mathtt{Min}(\secretF{D'},\secretF{C'})$}
 }
-\caption{The secret minimum evaluation protocol $\mathtt{Min}$ ($k=1$).}
+\caption{Secure minimum evaluation protocol \texttt{Min} ($k=1$).}
 \label{alg:sec-min1}
 \end{algorithm}
 \end{center}
@@ -290,7 +290,7 @@ $\secretF{c'}_{n'-1} \leftarrow \secretF{c}_{n_t-1}$ \;
 }
 \Return{$\mathtt{Min}(\secretF{D'},\secretF{C'})$}
 }
-\caption{The secret minimum evaluation protocol with threshold $\mathtt{Min}$ ($k>1$).}
+\caption{Secure minimum evaluation protocol with threshold \texttt{Min} ($k>1$).}
 \label{alg:sec-min2}
 \end{algorithm}
 \end{center}

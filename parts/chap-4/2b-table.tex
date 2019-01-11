@@ -1,0 +1,64 @@
+\begin{longtable}{llXll}
+    \hlineI 
+    \multicolumn{1}{l}{\textbf{\#}} & \multicolumn{1}{l}{\textbf{Name}} & \multicolumn{1}{l}{\textbf{Description}} & \multicolumn{1}{l}{\textbf{Type}} & \multicolumn{1}{l}{\textbf{Maximum}} \\ \hlineI
+\endfirsthead
+
+\multicolumn{5}{l}%
+{\tablename\ \thetable{} \emph{continued from previous page}} \\
+
+\hlineI 
+\multicolumn{1}{l}{\textbf{\#}} & \multicolumn{1}{l}{\textbf{Name}} & \multicolumn{1}{l}{\textbf{Description}} & \multicolumn{1}{l}{\textbf{Type}} & \multicolumn{1}{l}{\textbf{Maximum}} \\ \hlineI
+\endhead
+
+\hlineI \multicolumn{5}{r}{\emph{continued on next page}} \\ \hlineI
+\endfoot
+
+\hlineI
+\caption[The features of the NSL-KDD dataset]{List of the different features of the NSL-KDD data-set after changing the type. The type column corresponds to the original type, hence the presence of categorical (C). Numerical values are represented by a N and binary by a B.}
+\label{tab:nsl-feat}
+\endlastfoot
+
+1 & connection\_length & Length of time of the  connection & N & 42908 \\
+2 & protocol\_udp & UDP protocol used in the connection   & C & 1 \\
+3 & protocol\_tcp & TCP protocol used in the connection   & C & 1 \\
+4 & protocol\_icmp & ICMP protocol used in the connection   & C & 1 \\
+5 & network\_service & Destination network service used for the connection & C & N/A \\
+6 & status\_flag & Connection status flag & C & N/A \\
+7 & data\_size\_in & Number of bytes transferred in single connection from source to destination & N & 1379963888 \\
+8 & data\_size\_return & Number of bytes transferred in single connection from destination to source & N & 1309937401 \\
+9 & IP\_check & checks whether IP adresses and port from source and destination are equal & B & 1 \\
+10 & wrong\_fragments & Number of wrong fragments in the connection & N & 3 \\
+11 & number\_urgent\_bits & Number of packets with "urgent" bit activated in the connection & N & 3 \\
+12 & number\_hots & Number of "hot" indicators in the content (eg. access to directory, creation or execution of programs) & N & 77 \\
+13 & count\_failed & Count of unsuccessful login attempts & N & 5 \\
+14 & login\_success & Indicator of successful login & B & 1 \\
+15 & number\_compromised & Number of compromised conditions & N & 7479 \\
+16 & root\_flag & Indicator of "root" shell has been obtained & B & 1 \\
+17 & number\_su & Number of attempts of "su root" command & N & 2 \\
+18 & number\_root\_ops & Number of operations or accesses preformed as "root" connection & N & 7468 \\
+19 & number\_new\_files & Number of new files in the connection & N & 43 \\
+20 & number\_shells\_prompt & Number of shell prompts in the connection & N & 2 \\
+21 & number\_access\_control & Number of "access control" files operations & N & 9 \\
+22 & number\_outbnd\_cmd & Number of outbound commands in an ftp connection & N & 0 \\
+23 & hot\_login\_flag & Indicator of login user on "hot" list (root or admin) & B & 1 \\
+24 & guest\_flag & Indicator of login user as "guest" & binary & 1 \\
+25 & count\_same\_dest & Number of connections to the same destination host in the past 2 seconds & N & 511 \\
+26 & count\_same\_serv & Number of connections to the same service (port) in the past 2 seconds & N & 511 \\
+27 & perc\_dest\_error & Proportion of connections of "count\_same\_dest" that activated "status\_flag" as "error" or "reject" & N & 1 \\
+28 & perc\_serv\_error & Proportion of connections of "count\_same\_serv" that activated "status\_flag" as "error" or "reject" & N & 1 \\
+29 & perc\_dest\_rej & Proportion of connections of "count\_same\_dest" that activated "status\_flag" as "reject" & N & 1 \\
+30 & perc\_serv\_rej & Proportion of connections of "count\_same\_serv" that activated "status\_flag" as "reject" & N & 1 \\
+31 & perc\_dest\_serv & Proportion of connections in common of "count\_same\_dest" and "count\_same\_serv" & N & 1 \\
+32 & perc\_dest\_nserv & Proportion of connections of "count\_same\_dest" but not aggregated in "count\_same\_serv" & N & 1 \\
+33 & perc\_serv\_ndest & Proportion of connections of "count\_same\_serv" but not aggregated in "count\_same\_dest" & N & 1 \\
+34 & number\_same\_IP & Number of connections to the same destination host IP address & N & 255 \\
+35 & number\_same\_hserv & Number of connections to the same destination host service & N & 255 \\
+36 & perc\_IP\_ same\_hserv & Proportion of connections to the same IP ("number\_same\_IP") that were to the same port & N & 1 \\
+37 & perc\_IP\_ nsame\_hserv & Proportion of connections to the same IP ("number\_same\_IP") that were not to the same service & N & 1 \\
+38 & perc\_hserv\_ same\_sserv & Proportion of connections to the same host service ("number\_same\_serv") that were from the same source port & N & 1 \\
+39 & perc\_hserv\_ same\_IP & Proportion of connections to the same host service ("number\_same\_serv") that were to the same host IP & N & 1 \\
+40 & perc\_IP\_ error & Proportion of connections to the same IP ("number\_same\_IP") that activated "status\_flag" as "error" or "reject" & N & 1 \\
+41 & perc\_hserv\_ error & Proportion of connections to the same host service ("number\_same\_serv") that activated "status\_flag" as "error" or "reject" & N & 1 \\
+42 & perc\_IP\_ rej & Proportion of connections to the same IP ("number\_same\_IP") that activated "status\_flag" as"reject" & N & 1 \\
+43 & perc\_hserv\_ rej & Proportion of connections to the same host service ("number\_same\_serv") that activated "status\_flag" as "reject" & N & 1 \\
+    \end{longtable}

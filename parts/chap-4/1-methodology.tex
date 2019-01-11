@@ -1,1 +1,35 @@
 \section{Methodology}
+This chapter aims at evaluating the different algorithms and the possible feature and instance set reductions possible to make them suitable for a practically feasible secure usage. Each algorithm is first tested with all data reduction methods to assess which trade-offs can be made on the classification performance. Finally, they are tested in a MPC setting to observe how the reductions reduce their computational, round and communication costs.
+
+To investigate the classification performance, we use different indicators based on the classification \emph{confusion matrix}, also called \emph{error matrix}. This matrix represents the results of the classification. Each column stands for the number of occurrences of a real class, whereas the lines stand for the observed classes. If the classifier is perfect, all estimated classes should correspond to the real ones and the classification matrix should only have non-zero elements on its diagonal. In the specific case of binary classifiers (class/non-class), the elements of the classification matrix often are referred to as true positives ($f_p$), true negatives ($t_n$), false positives ($f_p$) and false negatives ($f_n$):
+\begin{equation}
+    \begin{pmatrix}
+    t_p & f_n \\
+    f_p & t_n
+    \end{pmatrix}.
+\end{equation}
+
+Still, we would like to have some classification performance indicators that are one-dimensional for the ease of the comparison of the different methods. From the confusion matrix, we can build different classifiers. Of course, it is never possible to build a perfect indicator as the reduction of the confusion matrix to one dimension is inevitably accompanied by some information loss. The first one is the accuracy that represents the proportion of well-classified elements
+\begin{equation}
+    \mathtt{Accuracy} = \frac{t_p + t_n}{t_p + t_n + f_p + f_n},
+\end{equation}
+and can be generalized in multi-class systems (the trace of the confusion matrix divided by its total number of elements). It's maximum is always 1 and minimum always 0. The accuracy indicator has a few limitations and the most notable one is its lack of sensibility to the initial distribution. Let's imagine a binary system where the first class is very well classified and comprises the majority of the proportion of the test set. The other class is highly misclassified but represents a very limited proportion of the test set. The accuracy would be high as most of the data (the first class) is well classified, though the other class is not and almost doesn't count in the accuracy indicator, whatever its performance.
+
+This problem can be solved by considering \emph{Matthew's correlation coefficient}~\cite{Matthews1975ComparisonLysozyme} that is defined as
+\begin{equation}
+    \mathtt{MCC} = \frac{t_p \times t_n - f_p \times f_n}{\sqrt{(t_p + f_p)(t_p+f_n)(t_n+f_p)(t_n+f_n)}}.
+\end{equation}
+
+This indicator can be interpreted as the correlation between predictions and observations, hence its name. For multi-class models, the MCC will be computed as the mean for all the classes. This makes sense as the indicator doesn't depend on the order of the class (e.g. in the binary case: the indicator is the same whatever is considered as the positive or negative class). Its value always range from -1 for the worst case to 1 forst the best case.
+
+A last indicator will be considered: \emph{Cohen's kappa coefficient} measures the difference between the measured classifier and a random classifier. More specifically, it is given by
+\begin{equation}
+    \mathtt{Kappa} = \frac{\mathtt{Accuracy}-p_e}{1-p_e},
+\end{equation}
+where $p_e$ represents the accuracy of a random classifier and is given by
+\begin{equation}
+    p_e = \frac{p(t_p+f_p) + n(f_n+t_n)}{(t_p+t_n+f_p+f_n)^2},
+\end{equation}
+where $p$ and $n$ are the proportion of positive and negatives occurrences. For multi-class models, it can be generalized by considering $t_p$ (resp. $t_n$, $f_p$ and $f_n$) as the sum of the same $t_p$ (resp. $t_n$, $f_p$ and $f_n$) for each individual binary classifier~\cite{doi:10.1177/001316446002000104}. Here again, it gives an answer to the problem of unequal classes distributions. In a binary system where a class is much more present than the other, the value for $p_e$ will be high as the random classifier will assign each element with a high probability of being the much more present class. In the extreme case of all the elements being in the same class, the random classifier will assign each element to that only class. Its respective probability would be 1 and $\mathtt{Kappa}$ 0. Though, the accuracy would be 100\%.
+
+All experiments were done on a 3,3GHz Intel Core i7 dual-core (Skylake) processor with 16GB RAM computer. The machine-learning classification performance experiments have been done using MATLAB R2018a.

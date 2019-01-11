@@ -1,5 +1,12 @@
 \chapter{Introduction}
 \label{cha:1}
+More than ever, information today is equal to money and power. The four most valued companies in the world (Microsoft, Apple, Google and Amazon) all have a significant part of their business model based on information and data. Furthermore, the rest of the industry has also fully entered into this information mutation: data is now everywhere. And so is sensitive data such as medical, governmental or industrial data. This characterizes the new information age we now live in. However, networks are now experiencing more and more attacks of various types trying to recover this information. The new information paradigm has to come with its new defense mechanisms.
+
+Machine-learning has allowed improvement of many models, including the ones identifying network attacks. Though, these models have to be constructed using significant amounts of data, which are often based on previous real attacks making them sensitive. These models also ideally should be used as much as possible to better protect the information. We thus face the following paradox: sensitive data should be used to improve the protection of sensitive data.
+
+This paradox can be solved by using multi-party computation (MPC). This allows for different parties to commonly compute an agreed-upon function where its input remains private and the output is revealed to certain parties. This solution allows a user to query a machine-learning algorithm trained on external data-bases, for its own defense while maintaining the privacy of all the data: the query and the data-base, on which the machine-learning algorithm has been trained. In other words, these solutions allow the use of sensitive data for a certain purpose without revealing it. This is a specific case of the now trendy \emph{private-data as a service} (PDaaS).
+
+However, if MPC allows us to solve our paradox, it also has a huge drawback: every operation is proportionally much more costly. We can thus not use MPC as we would use classical algorithms and must actively investigate the trade-offs we can make to reduce these costs. This thesis investigates how machine-learning can be used to evaluate a query based on an external data-base while preserving the privacy of the data, in the specific case of \emph{intrusion detection systems}.
 
 \input{parts/chap-1/1-related.tex}
 \input{parts/chap-1/2-claims.tex}

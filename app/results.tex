@@ -1,2 +1,589 @@
 \chapter{Additional experimental results}
 \label{app:add}
+
+\newpage
+\section{Support Vector Machines}
+\subsection{Linear SVMs}
+\label{app:lsvm}
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXX}
+    \hlineI
+    Model & Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \textbf{Tree 1} with $n=2000$ & & & & & &\\
+    Accuracy [\%] & 87.67 & 96.36 & 96.13 & 94.30 & 46.67 & 92.81\\ 
+    MCC & 86.34 & 95.69 & 91.36 & 72.66 & 35.29 & 70.86\\ 
+    Kappa & 29.17 & 42.85 & 41.90 & 92.27 & 99.66 & 70.88\\ \hline
+    Obs. Normal  & 2630 & 38 & 175 & 145 & 12 & \\ 
+    Obs. Probe  & 56 & 2172 & 20 & 5 & 0 & \\ 
+    Obs. DoS  & 63 & 17 & 2167 & 6 & 1 & \\ 
+    Obs. R2L  & 13 & 0 & 0 & 215 & 0 & \\ 
+    Obs. U2R  & 0 & 0 & 0 & 5 & 4 & \\  \hlineI
+    
+    \textbf{Tree 2} with $n=2000$ & & & & & &\\
+    Accuracy [\%] & 90.55 & 96.22 & 95.37 & 91.93 & 44.44 & 91.96\\ 
+    MCC & 87.67 & 96.01 & 91.27 & 78.55 & 34.90 & 77.45\\ 
+    Kappa & 27.41 & 43.01 & 42.32 & 93.14 & 99.70 & 74.04\\  \hline 
+    Obs. Normal  & 2717 & 27 & 161 & 86 & 9 & \\ 
+    Obs. Probe  & 65 & 2169 & 17 & 2 & 0 & \\ 
+    Obs. DoS  & 86 & 14 & 2150 & 4 & 0 & \\ 
+    Obs. R2L  & 17 & 1 & 0 & 210 & 1 & \\ 
+    Obs. U2R  & 0 & 0 & 0 & 5 & 4 & \\ \hlineI
+    
+    \textbf{O-A-A} with $n=2000$ & & & & & &\\
+    Accuracy [\%] & 91.70 & 95.41 & 93.40 & 92.46 & 44.44 & 92.07\\ 
+    MCC & 86.90 & 95.87 & 90.26 & 79.28 & 42.14 & 74.74\\ 
+    Kappa & 26.47 & 43.43 & 43.22 & 93.16 & 99.75 & 75.22\\  \hline
+    Obs. Normal  & 2751 & 11 & 149 & 83 & 6 & \\ 
+    Obs. Probe  & 88 & 2151 & 14 & 1 & 0 & \\ 
+    Obs. DoS  & 127 & 17 & 2105 & 5 & 0 & \\ 
+    Obs. R2L  & 17 & 0 & 0 & 211 & 0 & \\ 
+    Obs. U2R  & 0 & 0 & 0 & 5 & 4 & \\  \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the linear SVM classification algorithm for different multi-class models for $n=2000$.}
+    \label{tab:svm-l-0}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXX}
+    \hlineI
+    Model & Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \textbf{Tree 1} with $n=30,000$ & & & & & &\\
+    Accuracy [\%] & 91.37 & 97.40 & 96.34 & 94.07 & 73.33 & 94.62\\ 
+    MCC [\%] & 89.00 & 96.03 & 93.15 & 85.20 & 67.38 & 86.15\\
+    Kappa [\%] & 27.06 & 42.34 & 42.25 & 93.59 & 99.66 & 83.19\\ \hline
+    Obs. Normal  & 2741 & 63 & 136 & 55 & 5 & \\ 
+    Obs. Probe  & 53 & 2195 & 2 & 3 & 0 & \\ 
+    Obs. DoS  & 76 & 5 & 2171 & 1 & 0 & \\ 
+    Obs. R2L  & 13 & 0 & 0 & 213 & 0 & \\ 
+    Obs. U2R  & 2 & 0 & 0 & 1 & 9 & \\  \hlineI
+    
+    \textbf{Tree 2} with $n=30,000$ & & & & & &\\
+    Accuracy [\%] & 92.56 & 97.11 & 96.18 & 93.27 & 66.67 & 95.12\\ 
+    MCC & 89.84 & 96.82 & 92.39 & 87.16 & 73.46 & 89.12\\ 
+    Kappa & 26.35 & 42.70 & 42.14 & 93.79 & 99.72 & 84.74\\ \hline 
+    Obs. Normal  & 2777 & 29 & 151 & 42 & 2 & \\ 
+    Obs. Probe  & 56 & 2189 & 9 & 0 & 0 & \\ 
+    Obs. DoS  & 80 & 6 & 2168 & 0 & 0 & \\ 
+    Obs. R2L  & 14 & 1 & 0 & 211 & 0 & \\ 
+    Obs. U2R  & 0 & 0 & 0 & 4 & 8 & \\ \hlineI
+    
+    \textbf{O-A-A} with $n=30,000$ & & & & & &\\
+    Accuracy [\%] & 93.03 & 96.67 & 96.53 & 94.60 & 70 & 94.62\\ 
+    MCC & 90.13 & 96.84 & 92.81 & 88.31 & 77.52 & 87.93\\ 
+    Kappa & 26.07 & 42.96 & 42.05 & 93.78 & 99.72 & 84.12\\ \hline
+    Obs. Normal  & 2791 & 18 & 150 & 40 & 1 & \\ 
+    Obs. Probe  & 71 & 2179 & 4 & 0 & 0 & \\ 
+    Obs. DoS  & 70 & 8 & 2176 & 0 & 0 & \\ 
+    Obs. R2L  & 12 & 0 & 0 & 214 & 0 & \\ 
+    Obs. U2R  & 0 & 0 & 0 & 3 & 8 &\\ \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the linear SVM classification algorithm for different multi-class models for $n=30,000$.}
+    \label{tab:svm-l-b}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXX}
+    \hlineI
+    Model & Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \textbf{Tree 1} $n=100,000$ & & & & & &\\
+    Accuracy [\%] & 93.19 & 97.77 & 95.68 & 35.75 & 10.77 & 93.96\\ 
+    MCC & 87.08 & 96.69 & 92.77 & 50.96 & 18.95 & 69.29\\ 
+    Kappa & 25.33 & 41.94 & 42.19 & 96.34 & 99.79 & 80.28\\ \hline
+    Obs. Normal  & 2796 & 48 & 133 & 22 & 1 & \\ 
+    Obs. Probe  &48 & 2214 & 2 & 0 & 0 & \\ 
+    Obs. DoS  & 91 & 7 & 2167 & 0 & 0 & \\ 
+    Obs. R2L  & 123 & 0 & 0 & 69 & 1 & \\ 
+    Obs. U2R  & 11 & 0 & 0 & 1 & 1 & \\  \hlineI
+    
+    \textbf{Tree 2} $n=100,000$ & & & & & &\\
+    Accuracy [\%] & 93.51 & 97.35 & 96.74 & 80.41 & 36.92 & 95.41\\ 
+    MCC & 90.34 & 97.31 & 92.79 & 82.31 & 54.36 & 87.31\\ 
+    Kappa & 25.66 & 42.33 & 41.57 & 95.17 & 99.76 & 85.67\\ \hline
+    Obs. Normal  & 2805 & 20 & 150 & 24 & 0 & \\ 
+    Obs. Probe  & 49 & 2205 & 11 & 0 & 0 & \\ 
+    Obs. DoS  & 67 & 6 & 2191 & 1 & 0 & \\ 
+    Obs. R2L  & 37 & 0 & 0 & 155 & 1 & \\ 
+    Obs. U2R  & 6 & 0 & 0 & 2 & 5 & \\ \hlineI
+    
+    \textbf{O-A-A} $n=100,000$ & & & & & &\\
+    Accuracy [\%] & 93.39 & 96.97 & 97.58 & 85.49 & 61.54 & 93.96\\ 
+    MCC & 90.77 & 97.50 & 93.26 & 83.32 & 71.71 & 83.42\\ 
+    Kappa & 25.82 & 42.60 & 41.19 & 94.93 & 99.71 & 84.87\\ \hline
+    Obs. Normal  & 2802 & 7 & 164 & 27 & 0 & \\ 
+    Obs. Probe  & 67 & 2196 & 2 & 0 & 0 & \\ 
+    Obs. DoS  & 45 & 4 & 2210 & 6 & 0 & \\ 
+    Obs. R2L  & 27 & 0 & 0 & 165 & 1 & \\ 
+    Obs. U2R  & 2 & 0 & 0 & 3 & 8 & \\ \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the linear SVM classification algorithm for different multi-class models for $n=100,000$.}
+    \label{tab:svm-l-2}
+\end{table}
+
+\FloatBarrier 
+\newpage
+\subsection{Linear SVM with PCA decomposition}
+\label{app:lsvm-pca}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXX}
+    \hlineI
+    Model & Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \textbf{Tree} with $n_{pca}=8$ & & & & & &\\
+    Accuracy [\%] & 91.49 & 92.01 & 91.33 & 93.33 & 3.64 & 91.51\\ 
+    MCC [\%] & 87.21 & 91.53 & 87.34 & 70.16 & $\emptyset$ & $\emptyset$\\ 
+    Kappa [\%] & 26.55 & 43.84 & 43.22 & 93.69 & 99.84 & 71.11\\ \hline
+    Obs. Normal & 2745 & 46 & 123 & 86 & 0 & \\ 
+    Obs. Probe  &93 & 2089 & 87 & 1 & 0 & \\ 
+    Obs. DoS  & 104 & 42 & 2073 & 51 & 0 & \\ 
+    Obs. R2L  & 12 & 0 & 0 & 168 & 0 & \\ 
+    Obs. U2R  & 5 & 0 & 0 & 6 & 0 & \\  \hlineI
+    
+    \textbf{O-A-A} with $n_{pca}=8$ & & & & & &\\
+    Accuracy [\%] & 87.50 & 91.54 & 94.28 & 95.33 & 12.73 & 90.75 \\ 
+    MCC [\%] & 85.62 & 91.02 & 88.42 & 71.14 & 4.13 & 68.07 \\ 
+    Kappa [\%] & 29.07 & 43.99 & 41.76 & 93.60 & 98.90 & 71.11 \\  \hline
+    Obs. Normal  & 2625 & 50 & 137 & 127 & 61 & \\ 
+    Obs. Probe  & 76 & 2078 & 112 & 2 & 1 & \\ 
+    Obs. DoS  & 67 & 44 & 2140 & 11 & 9 & \\ 
+    Obs. R2L  & 7 & 0 & 0 & 172 & 1 & \\ 
+    Obs. U2R  & 2 & 0 & 0 & 8 & 1 & \\ \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the linear SVM classification algorithm for different multi-class models with PCA decomposition and $n_{pca}=8$ components kept. The first one is a tree-based model of order \{Normal, DoS, Prob, R2L, U2R\} and the second one a one-against-all model. Every result if the mean of 5 independent experiments.}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXX}
+    \hlineI
+    Model & Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \textbf{Tree} with $n_{pca}=16$ & & & & & &\\
+    Accuracy [\%] & 91.33 & 94.94 & 94.19 & 96.11 & 33.33 & 93.24\\ 
+    MCC & 87.13 & 95.35 & 90.77 & 79.68 & $\emptyset$ & $\emptyset$\\ 
+    Kappa & 26.76 & 43.51 & 42.83 & 93.25 & 99.62 & 78.86 \\  \hline
+    Obs. Normal  & 2740 & 12 & 150 & 89 & 8 & \\ 
+    Obs. Probe  &98 & 2142 & 16 & 1 & 0 & \\ 
+    Obs. DoS  & 100 & 22 & 2125 & 8 & 1 & \\ 
+    Obs. R2L  & 8 & 0 & 0 & 208 & 0 & \\ 
+    Obs. U2R  & 6 & 0 & 0 & 4 & 5 & \\   \hlineI
+    
+    \textbf{O-A-A} with $n_{pca}=16$ & & & & & &\\
+    Accuracy [\%] & 91.11 & 95.55 & 95.63 & 95.09 & 18.67 & 93.31\\ 
+    MCC & 88.16 & 95.62 & 91.18 & 80.59 & 25.99 & 76.31\\ 
+    Kappa & 27.08 & 43.23 & 42.09 & 93.42 & 99.74 & 80.29\\  \hline
+    Obs. Normal  & 2733 & 24 & 162 & 80 & 1 & \\ 
+    Obs. Probe  & 72 & 2156 & 26 & 3 & 0 & \\ 
+    Obs. DoS  & 80 & 15 & 2157 & 2 & 1 & \\ 
+    Obs. R2L  & 10 & 0 & 1 & 205 & 0 & \\ 
+    Obs. U2R  & 6 & 0 & 0 & 6 & 3 & \\  \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the linear SVM classification algorithm for different multi-class models with PCA decomposition and $n_{pca}=16$ components kept. The first one is a tree-based model of order \{Normal, DoS, Prob, R2L, U2R\} and the second one a one-against-all model. Every result if the mean of 5 independent experiments.}
+\end{table}
+
+\FloatBarrier 
+\newpage
+\subsection{Radial function based kernel support vector machines}
+\label{app:rbfsvm}
+
+\begin{table}[t]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXX}
+    \hlineI
+    Model & Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \textbf{Tree 1} with $n=15,000$ & & & & & &\\
+    Accuracy [\%] & 97.82 & 99.08 & 99.01 & 91.71 & 24.00 & 98.20\\ 
+    MCC [\%] & 96.62 & 99.03 & 98.54 & 87.47 & 32.25 & 82.78\\ 
+    Kappa [\%] & 23.65 & 42.23 & 42.14 & 93.71 & 99.69 & 94.39\\  \hline
+    Obs. Normal  & 2935 & 7 & 21 & 33 & 5 & \\ 
+    Obs. Probe  & 18 & 2229 & 2 & 0 & 0 & \\ 
+    Obs. DoS  & 19 & 2 & 2228 & 1 & 0 & \\ 
+    Obs. R2L  & 16 & 1 & 1 & 215 & 1 & \\ 
+    Obs. U2R  & 5 & 0 & 0 & 6 & 4 & \\   \hlineI
+    
+    \textbf{Tree 2} with $n=15,000$ & & & & & &\\
+    Accuracy [\%] & 97.98 & 98.25 & 99.20 & 91.45 & 28.00 & 98.08\\ 
+    MCC [\%] & 96.23 & 98.44 & 98.56 & 89.30 & $\emptyset$ & $\emptyset$\\ 
+    Kappa [\%] & 23.46 & 42.56 & 42.04 & 93.85 & 99.72 & 94.00\\  \hline
+    Obs. Normal  & 2939 & 8 & 24 & 26 & 2 & \\ 
+    Obs. Probe  & 36 & 2211 & 4 & 0 & 0 & \\ 
+    Obs. DoS  & 17 & 1 & 2232 & 0 & 0 & \\ 
+    Obs. R2L  & 19 & 1 & 0 & 214 & 0 & \\ 
+    Obs. U2R  & 7 & 0 & 0 & 3 & 4 & \\  \hlineI
+    
+    \textbf{O-A-A} with $n=15,000$ & & & & & &\\
+    Accuracy [\%] & 98.33 & 99.40 & 99.15 & 92.14 & 24.00 & 98.55\\ 
+    MCC [\%] & 97.28 & 99.41 & 98.84 & 88.54 & 33.55 & 83.52\\ 
+    Kappa [\%] & 23.38 & 42.13 & 42.14 & 93.76 & 99.72 & 95.47\\   \hline 
+    Obs. Normal  & 2950 & 4 & 15 & 30 & 1 & \\ 
+    Obs. Probe  & 12 & 2237 & 1 & 0 & 0 & \\ 
+    Obs. DoS  & 18 & 1 & 2231 & 0 & 0 & \\ 
+    Obs. R2L  & 15 & 1 & 0 & 216 & 2 & \\ 
+    Obs. U2R  & 5 & 0 & 1 & 5 & 4 & \\ \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the RBF-SVM classification algorithm for different multi-class models for $n=15,000$. The first one is a tree-based model of order \{Normal, DoS, Prob, R2L, U2R\} and the second one a one-against-all model. Every result if the mean of 5 independent experiments.}
+\end{table}
+
+\begin{table}[t]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXX}
+    \hlineI
+    Model & Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \textbf{Tree 1} with $n=50,000$ & & & & & &\\
+    Accuracy [\%] & 98.79 & 99.38 & 99.32 & 92.35 & 35.56 & 98.88\\ 
+    MCC [\%] & 97.82 & 99.42 & 98.98 & 91.23 & 48.81 & 87.25\\ 
+    Kappa [\%] & 23.00 & 41.75 & 41.68 & 94.69 & 99.82 & 96.46\\  \hline
+    Obs. Normal  & 2964 & 3 & 16 & 16 & 1 & \\ 
+    Obs. Probe  & 13 & 2248 & 1 & 0 & 0 & \\ 
+    Obs. DoS  & 13 & 2 & 2247 & 0 & 0 & \\ 
+    Obs. R2L  & 15 & 0 & 0 & 188 & 1 & \\ 
+    Obs. U2R  & 3 & 0 & 0 & 3 & 3 & \\  \hlineI
+    
+    \textbf{Tree 2} with $n=50,000$ & & & & & &\\
+    Accuracy [\%] & 98.93 & 99.02 & 99.27 & 91.76 & 40.00 & 98.80\\ 
+    MCC [\%] & 97.57 & 99.14 & 98.99 & 92.25 & 53.45 & 88.28\\ 
+    Kappa [\%] & 22.86 & 41.89 & 41.71 & 94.78 & 99.82 & 96.24\\   \hline
+    Obs. Normal  & 2968 & 5 & 15 & 12 & 1 & \\ 
+    Obs. Probe  & 22 & 2240 & 1 & 0 & 0 & \\ 
+    Obs. DoS  & 16 & 0 & 2245 & 0 & 0 & \\ 
+    Obs. R2L  & 16 & 0 & 0 & 187 & 1 & \\ 
+    Obs. U2R  & 3 & 0 & 0 & 2 & 4 & \\   \hlineI
+    
+    \textbf{O-A-A} with $n=50,000$ & & & & & &\\
+    Accuracy [\%] & 98.80 & 99.59 & 99.37 & 91.86 & 37.78 & 98.95\\ 
+    MCC [\%] & 97.94 & 99.61 & 99.03 & 91.09 & 45.08 & 86.55\\ 
+    Kappa [\%] & 23.02 & 41.67 & 41.66 & 94.71 & 99.81 & 96.70\\   \hline
+    Obs. Normal  & 2964 & 3 & 16 & 16 & 1 & \\ 
+    Obs. Probe  & 8 & 2253 & 1 & 0 & 0 & \\ 
+    Obs. DoS  & 13 & 1 & 2248 & 0 & 0 & \\ 
+    Obs. R2L  & 15 & 0 & 0 & 187 & 1 & \\ 
+    Obs. U2R  & 3 & 0 & 0 & 2 & 3 & \\  \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the RBF-SVM classification algorithm for different multi-class models for $n=50,000$. The first one is a tree-based model of order \{Normal, DoS, Prob, R2L, U2R\} and the second one a one-against-all model. Every result if the mean of 5 independent experiments.}
+\end{table}
+
+\FloatBarrier 
+\newpage
+\section{Nearest neighbours}
+\label{app:knn}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=10,000$}\\
+    Accuracy [\%] &&& 98.17 & 99.45 & 98.80 & 98.03 & 43.33 & 98.66\\ 
+    MCC [\%] &&& 97.49 & 99.19 & 98.63 & 92.76 & 39.68 & 85.55\\ 
+    Kappa [\%] &&& 23.48 & 41.80 & 42.04 & 94.07 & 99.74 & 95.81\\    \hline
+    Obs. Normal  &&& 2945 & 11 & 15 & 25 & 4 & \\ 
+    Obs. Probe  &&& 10 & 2246 & 2 & 1 & 0 & \\ 
+    Obs. DoS  &&& 23 & 3 & 2231 & 1 & 1 & \\ 
+    Obs. R2L  &&& 2 & 0 & 0 & 214 & 2 & \\ 
+    Obs. U2R  &&& 3 & 0 & 0 & 2 & 4 & \\  \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=10,000$}\\
+    Accuracy [\%] &&& 98.26 & 99.37 & 98.26 & 95.93 & 30 & 98.42\\ 
+    MCC [\%]  &&& 97.08 & 98.86 & 98.44 & 90.31 & 38.74 & 84.69\\ 
+    Kappa [\%] &&& 23.24 & 41.49 & 42.03 & 94.82 & 99.75 & 95.07\\  \hline
+    Obs. Normal  &&& 2948 & 17 & 9 & 24 & 2 & \\ 
+    Obs. Probe && & 12 & 2252 & 1 & 1 & 0 & \\ 
+    Obs. DoS && & 34 & 5 & 2227 & 1 & 0 & \\ 
+    Obs. R2L && & 6 & 0 & 0 & 181 & 1 & \\ 
+    Obs. U2R && & 3 & 0 & 0 & 5 & 4 & \\ \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=10,000$}\\
+    Accuracy [\%] &&& 97.05 & 98.90 & 98.80 & 97.81 & 55.00 & 98.08\\ 
+    MCC [\%] &&& 96.36 & 98.63 & 98.31 & 89.11 & 39.73 & 84.43\\ 
+    Kappa [\%] &&& 24.10 & 41.88 & 41.87 & 94.06 & 99.69 & 94.00\\    \hline 
+    Obs. Normal && & 2912 & 15 & 22 & 43 & 10 & \\ 
+    Obs. Probe && & 18 & 2236 & 5 & 1 & 0 & \\ 
+    Obs. DoS && & 22 & 4 & 2234 & 1 & 0 & \\ 
+    Obs. R2L && & 3 & 0 & 0 & 205 & 2 & \\ 
+    Obs. U2R && & 3 & 0 & 0 & 1 & 4 & \\  \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm for two different values of the number of neighbours $k$ and for a small training data-set.}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=100,000$}\\
+    Accuracy [\%] &&& 99.56 & 99.82 & 99.63 & 93.81 & 58.33 & 99.48\\ 
+    MCC [\%] &&& 99.00 & 99.73 & 99.57 & 95.39 & 62.16 & 91.17\\ 
+    Kappa [\%] &&& 22.61 & 41.51 & 41.58 & 94.88 & 99.85 & 98.36\\  \hline
+    Obs. Normal  &&& 2987 & 4 & 4 & 5 & 1 & \\ 
+    Obs. Probe  &&& 2 & 2260 & 2 & 0 & 0 & \\ 
+    Obs. DoS  &&& 8 & 0 & 2256 & 0 & 0 & \\ 
+    Obs. R2L  &&& 12 & 0 & 0 & 190 & 1 & \\ 
+    Obs. U2R  &&& 2 & 0 & 0 & 1 & 4 & \\   \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=100,000$}\\
+    Accuracy [\%] &&& 99.19 & 99.92 & 99.57 & 94.32 & 48.89 & 99.33\\ 
+    MCC [\%]  &&& 98.64 & 99.72 & 99.35 & 95.07 & 65.47 & 91.65\\ 
+    Kappa [\%] &&& 22.86 & 41.52 & 41.64 & 94.73 & 99.82 & 97.90\\   \hline
+    Obs. Normal  &&& 2976 & 7 & 11 & 7 & 0 & \\ 
+    Obs. Probe && & 2 & 2260 & 0 & 0 & 0 & \\ 
+    Obs. DoS && & 9 & 1 & 2252 & 0 & 0 & \\ 
+    Obs. R2L && & 12 & 0 & 0 & 194 & 0 & \\ 
+    Obs. U2R && & 4 & 0 & 0 & 1 & 4 & \\ \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=100,000$}\\
+    Accuracy [\%] &&& 99.32 & 99.77 & 99.66 & 89.85 & 40.83 & 99.22\\ 
+    MCC [\%] &&& 98.48 & 99.65 & 99.37 & 93.37 & 54.52 & 89.08\\ 
+    Kappa [\%] &&& 22.71 & 41.52 & 41.52 & 95.11 & 99.77 & 97.56\\   \hline 
+    Obs. Normal && & 2980 & 5 & 10 & 4 & 1 & \\ 
+    Obs. Probe && & 4 & 2259 & 2 & 0 & 0 & \\ 
+    Obs. DoS && & 8 & 0 & 2256 & 0 & 0 & \\ 
+    Obs. R2L && & 19 & 1 & 0 & 177 & 0 & \\ 
+    Obs. U2R && & 6 & 0 & 1 & 1 & 5 & \\  \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm for two different values of the number of neighbours $k$ and a big training data-set.}
+\end{table}
+
+\FloatBarrier 
+\newpage
+\subsection{$k$-means}
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=100,000$}\\
+    Accuracy [\%] &&& 95.19 & 99.29 & 98.78 & 96.92 & 76 & 97.45\\ 
+    MCC [\%] &&& 94.88 & 97.05 & 98.29 & 89.79 & 74.85 & 90.97\\ 
+    Kappa [\%] &&& 25.09 & 41.02 & 41.67 & 94.85 & 99.60 & 92.02\\   \hline
+    Obs. Normal  &&& 2856 & 12 & 25 & 5 & 3 & \\ 
+    Obs. Probe  &&& 84 & 2251 & 2 & 0 & 0 & \\ 
+    Obs. DoS  &&& 23 & 4 & 2239 & 0 & 0 & \\ 
+    Obs. R2L  &&& 34 & 1 & 0 & 179 & 0 & \\ 
+    Obs. U2R  &&& 4 & 0 & 0 & 0 & 11 & \\   \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=100,000$}\\
+    Accuracy [\%] &&& 95.03 & 99.26 & 98.28 & 97.82 & 55.00 & 97.27\\ 
+    MCC [\%]  &&& 94.59 & 97.16 & 97.86 & 89.90 & 33.75 & 82.65\\ 
+    Kappa [\%] &&& 25.26 & 41.32 & 42.08 & 93.91 & 99.82 & 91.48\\    \hline
+    Obs. Normal  &&& 2851 & 13 & 34 & 4 & 1 & \\ 
+    Obs. Probe && & 73 & 2243 & 5 & 0 & 0 & \\ 
+    Obs. DoS && & 27 & 3 & 2221 & 0 & 0 & \\  
+    Obs. R2L && & 43 & 1 & 0 & 211 & 1 & \\ 
+    Obs. U2R && & 6 & 0 & 0 & 1 & 2 & \\  \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=100,000$}\\
+    Accuracy [\%] &&& 86.61 & 98.75 & 98.54 & 98.14 & 72.22 & 93.94\\
+    MCC [\%] &&& 87.98 & 93.01 & 96.85 & 82.97 & 61.41 & 84.44\\ 
+    Kappa [\%] &&& 29.48 & 40.32 & 41.77 & 93.22 & 99.72 & 81.06\\    \hline 
+    Obs. Normal && & 2598 & 22 & 25 & 2 & 2 & \\ 
+    Obs. Probe && & 246 & 2229 & 4 & 0 & 0 & \\ 
+    Obs. DoS && & 65 & 5 & 2224 & 0 & 0 & \\ 
+    Obs. R2L && & 87 & 1 & 4 & 216 & 1 & \\
+    Obs. U2R && & 4 & 0 & 0 & 2 & 7 & \\  \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm for two different values of the number of neighbours $k$ and $k$-means data reduction.}
+\end{table}
+
+\FloatBarrier 
+\newpage
+\subsection{Condensed nearest neighbors}
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=10,000$}\\
+    Accuracy [\%] &&& 97.63 & 99.11 & 98.26 & 98.16 & 80 & 98.25\\ 
+    MCC [\%] &&& 96.73 & 99.02 & 98.02 & 90.27 & 59.45 & 88.70\\ 
+    Kappa [\%] &&& 23.74 & 41.94 & 42.19 & 93.92 & 99.70 & 94.52\\    \hline
+    Obs. Normal  &&& 2929 & 14 & 31 & 3 & 1 & \\ 
+    Obs. Probe  &&& 9 & 2238 & 1 & 1 & 0 & \\ 
+    Obs. DoS  &&& 20 & 4 & 2219 & 0 & 0 & \\ 
+    Obs. R2L  &&& 36 & 1 & 4 & 213 & 1 & \\ 
+    Obs. U2R  &&& 6 & 0 & 3 & 0 & 6 & \\ \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=10,000$}\\
+    Accuracy [\%] &&& 93.67 & 94.48 & 78.75 & 68.56 & 36.67 & 88.81\\ 
+    MCC [\%]  &&& 85.64 & 84.77 & 82.47 & 78.84 & 36.00 & 73.54\\ 
+    Kappa [\%] &&& 24.58 & 40.61 & 48.94 & 95.17 & 99.86 & 65.03\\     \hline
+    Obs. Normal  &&& 2810 & 44 & 238 & 66 & 2 & \\ 
+    Obs. Probe && & 172 & 2135 & 241 & 0 & 0 & \\ 
+    Obs. DoS && & 6 & 81 & 1780 & 0 & 0 & \\ 
+    Obs. R2L && & 10 & 0 & 1 & 147 & 2 & \\ 
+    Obs. U2R && & 2 & 0 & 0 & 1 & 2 & \\   \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=10,000$}\\
+    Accuracy [\%] &&& 94.37 & 90.02 & 88.40 & 86.43 & 36.47 & 91.01\\ 
+    MCC [\%] &&& 90.39 & 85.97 & 85.30 & 85.11 & 51.17 & 79.59\\ 
+    Kappa [\%] &&& 25.04 & 43.77 & 44.66 & 94.26 & 99.67 & 71.91\\    \hline 
+    Obs. Normal &&& 2831 & 41 & 106 & 29 & 10 & \\ 
+    Obs. Probe && & 101 & 2029 & 155 & 0 & 0 & \\ 
+    Obs. DoS &&& 35 & 182 & 1993 & 0 & 0 & \\ 
+    Obs. R2L &&& 32 & 2 & 1 & 191 & 0 & \\ 
+    Obs. U2R &&& 1 & 0 & 0 & 1 & 6 & \\   \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm for $k=1,2,3$ with condensed neighbours reduction.}
+\end{table}
+
+\FloatBarrier 
+\newpage
+\subsection{CNN with PCA}
+\label{app:knn-cnn-pca}
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=10,000$ and $n_{pca}=8$}\\
+    Accuracy [\%] &&& 97.27 & 98.81 & 98.18 & 95 & 51.67 & 97.85\\  
+    MCC [\%] &&& 96.15 & 98.25 & 97.79 & 89.08 & 43.98 & 85.05\\  
+    Kappa [\%] &&& 23.90 & 41.87 & 42.13 & 94.29 & 99.63 & 93.29\\     \hline
+    Obs. Normal  &&& 2918 & 16 & 32 & 7 & 5 & \\  
+    Obs. Probe  &&& 20 & 2233 & 9 & 0 & 0 & \\ 
+    Obs. DoS  &&& 21 & 8 & 2219 & 0 & 0 & \\ 
+    Obs. R2L  &&& 34 & 2 & 0 & 198 & 1 & \\ 
+    Obs. U2R  &&& 7 & 0 & 0 & 4 & 6 & \\ \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=10,000$ and $n_{pca}=8$}\\
+    Accuracy [\%] &&& 92.44 & 99.45 & 66.28 & 68.14 & 4 & 86.03\\  
+    MCC [\%]  &&& 84.16 & 82.18 & 75.89 & 74.38 & $\emptyset$ & $\emptyset$\\ 
+    Kappa [\%] &&& 25.45 & 36.97 & 53.77 & 94.51 & 99.85 & 56.35\\    \hline
+    Obs. Normal  &&& 2773 & 9 & 275 & 72 & 6 & \\  
+    Obs. Probe && & 188 & 2241 & 482 & 1 & 0 & \\ 
+    Obs. DoS && & 6 & 3 & 1493 & 0 & 0 & \\ 
+    Obs. R2L && & 33 & 1 & 2 & 157 & 4 & \\  
+    Obs. U2R && & 1 & 0 & 0 & 1 & 0 & \\    \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=10,000$ and $n_{pca}=8$}\\
+    Accuracy [\%] &&& 95.82 & 89.26 & 81.71 & 86.70 & 16 & 89.43\\ 
+    MCC [\%] &&& 91.91 & 81.79 & 79.87 & 81.48 & 19.28 & 70.87\\ 
+    Kappa [\%] &&& 24.22 & 43.09 & 46.82 & 94.36 & 99.79 & 66.98\\     \hline 
+    Obs. Normal &&& 2875 & 59 & 82 & 26 & 6 & \\ 
+    Obs. Probe && & 2875 & 59 & 82 & 26 & 6 & \\ 
+    Obs. DoS &&& 35 & 181 & 1847 & 0 & 0 & \\ 
+    Obs. R2L &&& 49 & 2 & 1 & 179 & 2 & \\  
+    Obs. U2R &&& 4 & 0 & 0 & 1 & 2 & \\    \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm for $k=1,2,3$ with condensed neighbours reduction and PCA decomposition ($n_{pca}=8$).}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=10,000$ and $n_{pca}=16$}\\
+    Accuracy [\%] &&& 97.16 & 98.68 & 98.61 & 96.78 & 86 & 98.00\\  
+    MCC [\%] &&& 96.30 & 98.33 & 98.22 & 89.69 & 55.24 & 87.56\\ 
+    Kappa [\%] &&& 24.00 & 41.91 & 41.92 & 94.30 & 99.56 & 93.77\\     \hline
+    Obs. Normal  &&& 2915 & 22 & 24 & 5 & 0 & \\ 
+    Obs. Probe  &&& 17 & 2232 & 7 & 0 & 0 & \\ 
+    Obs. DoS  &&& 19 & 6 & 2231 & 0 & 0 & \\ 
+    Obs. R2L  &&& 35 & 2 & 1 & 198 & 1 & \\ 
+    Obs. U2R  &&& 14 & 0 & 0 & 1 & 9 & \\  \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=10,000$ and $n_{pca}=16$}\\
+    Accuracy [\%] &&& 90.79 & 96.59 & 71.94 & 75.38 & 17.50 & 86.50\\
+    MCC [\%]  &&& 85.92 & 80.50 & 77.43 & 78.06 & $\emptyset$ & $\emptyset$\\ 
+    Kappa [\%] &&& 26.70 & 37.87 & 50.78 & 94.95 & 99.86 & 57.81\\    \hline
+    Obs. Normal  &&& 2724 & 16 & 179 & 48 & 4 & \\ 
+    Obs. Probe && & 202 & 2187 & 453 & 0 & 0 & \\  
+    Obs. DoS && & 37 & 59 & 1629 & 0 & 0 & \\ 
+    Obs. R2L && & 36 & 3 & 2 & 150 & 2 & \\  
+    Obs. U2R && & 1 & 0 & 0 & 0 & 1 & \\    \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=10,000$ and $n_{pca}=16$}\\
+    Accuracy [\%] &&& 92.27 & 92.52 & 94.92 & 83.77 & 12.73 & 92.79\\
+    MCC [\%] &&& 90.67 & 88.72 & 90.60 & 80.12 & 15.14 & 73.05\\ 
+    Kappa [\%] &&& 26.51 & 42.91 & 42.02 & 94.88 & 99.74 & 77.48\\  \hline 
+    Obs. Normal &&& 2768 & 24 & 51 & 30 & 6 & \\  
+    Obs. Probe && & 140 & 2096 & 56 & 0 & 1 & \\ 
+    Obs. DoS &&& 51 & 143 & 2151 & 0 & 0 & \\ 
+    Obs. R2L &&& 35 & 2 & 7 & 160 & 3 & \\ 
+    Obs. U2R &&& 6 & 0 & 1 & 1 & 1 & \\    \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm for $k=1,2,3$ with condensed neighbours reduction and PCA decomposition ($n_{pca}=16$).}
+\end{table}
+
+\FloatBarrier 
+\newpage
+\subsection{CNN with $\chi^2$ feature selection}
+\label{app:knn-cnn-chi2}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=10,000$, $\chi^2$ and CNN.}\\
+    Accuracy [\%] &&& 97.77 & 99.16 & 98.85 & 97.60 & 88.89 & 98.48\\ 
+    MCC [\%] &&& 96.98 & 99.03 & 98.91 & 92.61 & 45.63 & 86.63\\ 
+    Kappa [\%] &&& 23.66 & 41.82 & 41.97 & 94.35 & 99.44 & 95.24\\       \hline
+    Obs. Normal  &&& 2933 & 15 & 24 & 5 & 0 & \\ 
+    Obs. Probe  &&& 12 & 2242 & 0 & 0 & 0 & \\ 
+    Obs. DoS  &&& 7 & 2 & 2235 & 0 & 0 & \\
+    Obs. R2L  &&& 22 & 2 & 2 & 203 & 1 & \\ 
+    Obs. U2R  &&& 26 & 0 & 0 & 0 & 8 & \\    \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=10,000$, $\chi^2$ and CNN.}\\
+    Accuracy [\%] &&& 96.80 & 99.69 & 58.14 & 79.68 & 7.69 & 85.75\\ 
+    MCC [\%] &&& 89.53 & 79.61 & 70.04 & 84.74 & 19.56 & 68.70\\ 
+    Kappa [\%] &&& 23.02 & 35.61 & 56.12 & 95.48 & 99.81 & 55.47\\      \hline
+    Obs. Normal  &&& 2904 & 2 & 251 & 38 & 7 & \\ 
+    Obs. Probe  &&& 82 & 2260 & 698 & 0 & 0 & \\ 
+    Obs. DoS  &&& 3 & 5 & 1318 & 0 & 0 & \\ 
+    Obs. R2L  &&& 10 & 0 & 0 & 149 & 5 & \\ 
+    Obs. U2R  &&& 1 & 0 & 0 & 0 & 1 & \\   \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=10,000$, $\chi^2$ and CNN.}\\
+    Accuracy [\%] &&& 94.83 & 84.84 & 96.02 & 86.63 & 54.55 & 91.99\\ 
+    MCC [\%] &&& 93.37 & 86.87 & 86.26 & 77.55 & 46.62 & 78.13\\ 
+    Kappa [\%] &&& 25.22 & 46.90 & 40.33 & 94.22 & 99.66 & 74.96\\   \hline
+    Obs. Normal  &&& 2845 & 9 & 50 & 27 & 2 & \\ 
+    Obs. Probe  &&& 37 & 1919 & 36 & 0 & 0 & \\ 
+    Obs. DoS  &&& 53 & 324 & 2172 & 0 & 0 & \\ 
+    Obs. R2L  &&& 56 & 10 & 4 & 175 & 3 & \\ 
+    Obs. U2R  &&& 9 & 0 & 0 & 0 & 6 & \\    \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm with condensed neighbours reduction and $\chi^2$ (33) feature selection.}
+\end{table}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabularx}{\textwidth}{lXXXXXXXX}
+    \hlineI
+    Model &&& Normal & Probe & DoS & R2L & U2R & Total \\ \hlineI
+    \multicolumn{9}{l}{$k=1$ with $n=10,000$, $\chi^2$ and CNN.}\\
+    Accuracy [\%] &&& 91.23 & 93.80 & 93.66 & 90.54 & 87.50 & 97.87\\ 
+    MCC [\%] &&& 88.48 & 93.96 & 92.37 & 67.63 & 27.50 & 83.44\\ 
+    Kappa [\%] &&& 27.06 & 43.81 & 43.51 & 92.25 & 98.86 & 93.34\\      \hline
+    Obs. Normal  &&& 2737 & 55 & 91 & 12 & 1 & \\ 
+    Obs. Probe  &&& 45 & 2117 & 7 & 0 & 0 & \\ 
+    Obs. DoS  &&& 68 & 32 & 2114 & 0 & 0 & \\ 
+    Obs. R2L  &&& 106 & 44 & 34 & 201 & 0 & \\ 
+    Obs. U2R  &&& 44 & 9 & 11 & 9 & 7 & \\     \hlineI
+    
+    \multicolumn{9}{l}{$k=2$ with $n=10,000$, $\chi^2$ and CNN.}\\
+    Accuracy [\%] &&& 66.67 & 98.58 & 65.00 & 53.68 & 66.67 & 88.21\\ 
+    MCC [\%] &&& 53.49 & 74.83 & 73.74 & 63.41 & 10.96 & 72.02\\ 
+    Kappa [\%] &&& 37.25 & 35.09 & 54.09 & 94.98 & 97.21 & 63.14\\     \hline
+    Obs. Normal  &&& 2000 & 17 & 613 & 54 & 0 & \\ 
+    Obs. Probe  &&& 841 & 2222 & 118 & 3 & 0 & \\ 
+    Obs. DoS  &&& 23 & 6 & 1465 & 12 & 0 & \\ 
+    Obs. R2L  &&& 21 & 0 & 14 & 124 & 2 & \\ 
+    Obs. U2R  &&& 115 & 9 & 44 & 38 & 4 & \\   \hlineI
+    
+    \multicolumn{9}{l}{$k=3$ with $n=10,000$, $\chi^2$ and CNN.}\\
+    Accuracy [\%] &&& 91.27 & 4.60 & 85.09 & 80.09 & 0 & 76.65\\ 
+    MCC [\%] &&& 75.19 & 10.80 & 47.24 & 62.94 & 0.35 & 60.45\\ 
+    Kappa [\%] &&& 24.62 & 69.50 & 34.40 & 93.11 & 98.92 & 27.07\\    \hline
+    Obs. Normal  &&& 2738 & 412 & 249 & 30 & 1 & \\ 
+    Obs. Probe  &&& 58 & 104 & 5 & 0 & 0 & \\ 
+    Obs. DoS  &&& 94 & 1722 & 1923 & 2 & 0 & \\ 
+    Obs. R2L  &&& 70 & 17 & 64 & 169 & 9 & \\ 
+    Obs. U2R  &&& 40 & 5 & 19 & 10 & 0 & \\    \hlineI
+    \end{tabularx}
+    \caption{Detailed results of the $k$-NN classification algorithm with condensed neighbours reduction and $\chi^2$ (20) feature selection.}
+\end{table}

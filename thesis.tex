@@ -1,4 +1,7 @@
-\documentclass[master=wit,british,fleqn]{misc/kulemt}
+\documentclass[master=wit,english,fleqn,openright]{misc/kulemt}
+\usepackage{misc/kulemtx}
+\headstyles{kulemtman}
+\kulemtmanToC
 
 %%%%%%%%%%%%%%%%
 %%% PACKAGES %%%
@@ -17,6 +20,7 @@
 \usepackage{microtype}
 \usepackage{textcomp}
 \usepackage[pdfusetitle,plainpages=false]{hyperref}
+\usepackage[titletoc, toc, page]{appendix}
 
 %packages spéciaux
 %\usepackage{fullpage}
@@ -25,11 +29,12 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{wrapfig}
-\usepackage[font=small,labelfont=sc]{caption}
+\usepackage[font=small,labelfont=sc,justification=centering]{caption}
 \usepackage{makecell}
 \usepackage{array}
 \usepackage{csquotes}
 \usepackage[boxed]{algorithm2e}
+\usepackage{lipsum}
 
 \usepackage[numbered,framed,autolinebreaks]{misc/mcode}
 
@@ -44,6 +49,7 @@
 
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage{upquote}
 
 %% STYLE
 \pagestyle{headings}
@@ -64,6 +70,8 @@
 
 %% TABLES
 \usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{ltxtable}
 \newcommand\hlineI{\noalign{\hrule height 1.2pt}} % I line 1.2pt
 \newcolumntype{I}{!{\vline width 1.2pt}} % I column 1.2pt
 
@@ -97,7 +105,6 @@
 \newcommand{\secretI}[1]{\langle \bar{#1} \rangle}
 \newcommand{\secretF}[1]{\langle \tilde{#1} \rangle}
 
-
 %% OTHERS
 \DeclareMathOperator{\tr}{tr}
 
@@ -113,13 +120,13 @@
 \setup{title={Privacy-friendly machine learning algorithms for intrusion detection systems},
   author={Henri De Plaen},
   promotor={Prof.\,Dr.\,ir.\,Bart~Preneel},
-  assessor={Prof.\,Dr.\,ir.\,Sabine~Van~Huffel \and Prof.\,Dr.\,ir.\,Karl~Meerbergen},
+  assessor={Prof.\,Dr.\,ir.\,Karl~Meerbergen \and Prof.\,Dr.\,ir.\,Sabine~Van~Huffel},
   assistant={ Dr.\,Aysajan~Abidin \and Dr.\,Abdelrahaman~Aly}}
 
 \setup{filingcard,
-  translatedtitle=,
-  udc=621.3,
-  shortabstract={In today's information age, the risks and security threats to data are commonplace. Vital enterprise and user information should be protected from uninvited intruders lurking in our systems. Imagine the case where intruders are accessing to sensitive medical, industrial or governmental records using stolen or hacked but valid credentials. Machine learning techniques and algorithms have been used as a tool for intrusion detection in such scenarios. They typically monitor the behavior of the users, detecting anomalies that indicate possible infiltrations.}}
+  %translatedtitle=Privacyvriendelijke algoritmes voor het machinaal leren van inbraakdetectiesystemen,
+  udc=51-7,
+  shortabstract={In this thesis, we present a set of practically usable machine-learning algorithms for intrusion detection systems using multi-party computation (secret sharing). This allows a user to query an already trained model preserving both the privacy of the query and of the model. Two classical algorithms used for intrusion detection systems are investigated: support vector machines, both linear and non-linear, and nearest neighbors. Although non-linear support vector machines not seem very suited for the problem, linear support vector machines and nearest neighbors methods deliver very satisfying results. To make nearest neighbors feasible, condensed nearest neighbors are applied beforehand exploiting the trade-off between expensive clear pre-processing and a lightweight secret model. Furthermore, PCA and chi-square feature selection methods are investigated to reduce the evaluation costs even more.}}
 
 %\setup{font=lm}
 
@@ -129,10 +136,14 @@
 
 \begin{document}
 
-%\input{parts/misc/preface}
-%\input{parts/misc/abstract}
+\input{parts/misc/preface}
+\input{parts/misc/abstract}
 \tableofcontents*
-%\input{parts/misc/lists.tex}
+\input{parts/misc/lists.tex}
+
+\captionsetup[figure]{list=yes}
+\captionsetup[table]{list=yes}
+%\captionsetup[algorithm]{list=yes}
 
 \mainmatter
 \input{parts/chap-1/0-chap-1} 
@@ -141,12 +152,15 @@
 \input{parts/chap-4/0-chap-4}
 \input{parts/chap-5/0-chap-5}
 
-\appendixpage*
+\captionsetup[figure]{list=no}
+\captionsetup[table]{list=no}
+%\captionsetup[algorithm]{list=no}
+
+\part*{Appendix}
 \appendix
-\include{app/matlab}
-\include{app/scale}
-\include{app/quickselect}
+\include{app/code}
 \include{app/results}
+\include{app/quickselect}
 
 \backmatter
 %\bibliographystyle{ieeetr}

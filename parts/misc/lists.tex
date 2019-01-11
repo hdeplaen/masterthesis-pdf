@@ -2,28 +2,74 @@
 %\listoffigures
 %\listoftables
 % If you only have a few figures and tables you can use the following instead
-\listoffiguresandtables
+\clearpage
+\selectlanguage{english}
+\listoffigures
+\listoftables
+
+\addcontentsline{toc}{chapter}{List of Algorithms}
+\listofalgorithms
 % The list of symbols is also optional.
 % This list must be created manually, e.g., as follows:
-\chapter{List of Abbreviations and Symbols}
+\chapter{List of Symbols}
+\section*{Symbols}
+    \subsection*{General symbols}
+    \begin{flushleft}
+  \renewcommand{\arraystretch}{1.1}
+  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
+    $x_i$ & feature vector; \\
+    $y_i$ & corresponding class; \\
+    $\mathcal{E}_k(\cdot)$ & encryption function (with eventual key $k$ provided); \\
+    $H(\cdot)$ & hash function; \\
+    $\mathcal{O}(\cdot)$ & computational complexity; \\
+    $x|y$ & concatenation of $x$ and $y$; \\
+    $n_{svm}$ & number of support vector machines; \\
+    $n_{sv}$ & number of support vectors; \\
+    $n_q$ & number of queries; \\
+    $n_{pca}$ & number of components kept after PCA transformation; \\
+    $n_c$ & number of attack classes; \\
+    $n_f$ & number of features (feature vector dimension); \\
+    $n_t$ & number of training instances (training set size); \\
+    $n_{\chi^2}$ & number of selected features with the $\chi^2$-measure; \\
+    $k$ & number of neighbors in the $k$-NN algorithm; \\
+    $t_p$ & number of true positives (binary classification); \\
+    $t_n$ & number of true negatives (binary classification); \\
+    $f_p$ & number of false positives (binary classification); \\
+    $f_n$ & number of false negatives (binary classification). \\
+    \end{tabularx}
+    \end{flushleft}
+    
+  \subsection*{Symbols specific to chapter~\ref{cha:3}}
+  \begin{flushleft}
+  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
+    $\secretI{a}$ & secret integer; \\
+    $\secretI{a_i}$ & share of secret integer $\secretI{a}$; \\
+    $\secretF{a}$ & secret fixed point number; \\
+    $\secret{A}$ & vector or matrix of secret numbers (integer or fixed point); \\
+    $\secret{a}_{i}$ & secret number in vector $ \secret{A}$ (integer or fixed point); \\
+    $\secret{a}_{ij}$ & secret number in matrix $ \secret{A}$ (integer or fixed points); \\
+    $\secret{A}_{i:}$ & vector corresponding to the $i$-th line of matrix $\secret{A}$ (integer or fixed point); \\
+    $\secret{A}_{:j}$ & vector corresponding to the $j$-th column of matrix $\secret{A}$ (integer or fixed point); \\
+    $\mathbb{Z}_{\secret{k}}$ & space of secret integers of size $k$; \\
+    $\mathbb{Q}_{\secret{k,f}}$ & space of secret fixed point numbers of discriminand size $k$ and exponent $f$. \\
+  \end{tabularx}
+  \end{flushleft}
+
+
+\chapter{List of Abbreviations}
 \section*{Abbreviations}
 \begin{flushleft}
   \renewcommand{\arraystretch}{1.1}
-  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
-    LoG   & Laplacian-of-Gaussian \\
-    MSE   & Mean Square error \\
-    PSNR  & Peak Signal-to-Noise ratio \\
-  \end{tabularx}
-\end{flushleft}
-\section*{Symbols}
-\begin{flushleft}
-  \renewcommand{\arraystretch}{1.1}
-  \begin{tabularx}{\textwidth}{@{}p{12mm}X@{}}
-    42    & ``The Answer to the Ultimate Question of Life, the Universe,
-            and Everything'' according to H2G2 \\
-    $c$   & Speed of light \\
-    $E$   & Energy \\
-    $m$   & Mass \\
-    $\pi$ & The number pi \\
+  \begin{tabularx}{\textwidth}{@{}p{17mm}X@{}}
+    IDS & Intrusion detection system \\
+    MPC & Multi-party computation \\
+    PCA & Principal component analysis \\
+    KPCA & Kernel principal component analysis \\
+    SVM & Support vector machine \\
+    LSVM & Linear support vector machine \\
+    RBFSVM & Support vector machine with radial basis kernel function \\
+    $k$-NN & Nearest neighbors with $k$ neighbors \\
+    CNN & Condensed nearest neighbors \\
+    O-A-A & One-against-all (multi-class model)
   \end{tabularx}
 \end{flushleft}
